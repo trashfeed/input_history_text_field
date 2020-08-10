@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:input_history_text_field/src/widget/input_history_text_field_state.dart';
 
+// ignore: must_be_immutable
 class InputHistoryTextField extends StatefulWidget {
   final String historyKey;
   TextEditingController textEditingController;
@@ -183,7 +184,7 @@ class InputHistoryTextField extends StatefulWidget {
                     selectAll: true,
                     paste: true,
                   )),
-        super(key: key) {}
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => InputHistoryTextFieldState();
