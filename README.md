@@ -3,12 +3,16 @@ A `input_history_text_field` widget is show type history to users  as they type.
 
 ## Usage
 - The only key in the your application set to `historyKey`, supports like a `text_field`,
-```
-InputHistoryTextField(
-    historyKey: "01",
-),
+    ```
+    InputHistoryTextField(
+        historyKey: "01",
+    ),
 
-```
+    ```
+- the input history is automatically saved.( save up to `limit`, default to `5` )
+![input_history_text_field-1](https://user-images.githubusercontent.com/885696/89772114-6fe4ae80-db3c-11ea-91ff-9613da735258.gif)
+
+- 
 
 
 ## Overview
@@ -17,7 +21,7 @@ InputHistoryTextField(
 
 
 ## Attributes
-| name                  | ex              | type       | note                                                    |
+| name                  | ex              |            | note                                                    |
 | --------------------- | --------------- | ---------- | ------------------------------------------------------- |
 | historyKey            | `key-01`        | String     | a only key in the your application,saved with this key. |
 | limit                 | `5`             | int        | max limit of input history                              |
