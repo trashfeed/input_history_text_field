@@ -2,7 +2,8 @@ name: input_history_text_field
 description: show input text history.
 version: 0.0.1
 author: trashfeed<trashfeed@gmail.com>
-homepage: http://www.trashfeed.net/
+repository: https://github.com/trashfeed/input_history_text_field
+issue_tracker: https://github.com/trashfeed/input_history_text_field/issues
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
