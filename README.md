@@ -10,6 +10,12 @@ InputHistoryTextField(
 
 ```
 
+
+## Overview
+
+![input_history_text_field](https://user-images.githubusercontent.com/885696/89764480-6ef95000-db2f-11ea-8ad8-f7540f85021d.gif)
+
+
 ## Attributes
 | name                  | ex              | type       | note                                                    |
 | --------------------- | --------------- | ---------- | ------------------------------------------------------- |
@@ -25,5 +31,3 @@ InputHistoryTextField(
 | listRowDecoration     | `BoxDecoration` | Decoration | a row of input history for decoration                   |
 | listDecoration        | `BoxDecoration` | Decoration | a list of input history for decoration                  |
 
-
-## Overview
