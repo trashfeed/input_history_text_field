@@ -12,7 +12,12 @@ A `input_history_text_field` widget is show type history to users  as they type.
 - the input history is automatically saved.( save up to `limit`, default to `5` )
 ![input_history_text_field-1](https://user-images.githubusercontent.com/885696/89772114-6fe4ae80-db3c-11ea-91ff-9613da735258.gif)
 
-- 
+- You will be suggested as you type.
+![input_history_text_field-2](https://user-images.githubusercontent.com/885696/89772499-0f09a600-db3d-11ea-99a4-1439252dcbdb.gif)
+
+- Unnecessary history can be deleted
+![input_history_text_field-3](https://user-images.githubusercontent.com/885696/89772615-4710e900-db3d-11ea-92e9-f58988cad645.gif)
+
 
 
 ## Overview
