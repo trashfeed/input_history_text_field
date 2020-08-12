@@ -140,21 +140,17 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
           widget.textEditingController.text = item.text;
           this._inputHistory.submit();
         },
-        leading: widget.showHistoryIcon
-            ? Icon(
-                widget.historyIcon,
-                color: Theme.of(context).disabledColor,
-              )
-            : null,
+        leading: widget.showHistoryIcon ? _historyIcon() : null,
         dense: true,
         title: Text(
           item.textToSingleLine,
           overflow: TextOverflow.ellipsis,
+          style: widget.listTextStyle,
         ),
         trailing: widget.showDeleteIcon
             ? IconButton(
                 color: Theme.of(context).disabledColor,
-                icon: Icon(widget.deleteIcon),
+                icon: _deleteIcon(),
                 onPressed: () {
                   _inputHistory.remove(item);
                 },
@@ -162,6 +158,22 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
             : null,
       ),
     );
+  }
+
+  Widget _historyIcon() {
+    return widget.historyIconTheme ??
+        Icon(
+          widget.historyIcon,
+          color: Theme.of(context).disabledColor,
+        );
+  }
+
+  Widget _deleteIcon() {
+    return widget.deleteIconTheme ??
+        Icon(
+          widget.deleteIcon,
+          color: Theme.of(context).disabledColor,
+        );
   }
 
   void _onTap() {
