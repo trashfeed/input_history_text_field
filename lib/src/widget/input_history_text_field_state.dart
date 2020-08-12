@@ -134,8 +134,10 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
                       opacity: widget.enableOpacityGradient
                           ? 1 - index / snapshot.data.all.length
                           : 1,
-                      child: widget.historyListItemLayoutBuilder
-                              ?.call(snapshot.data.all[index], index) ??
+                      child: widget.historyListItemLayoutBuilder?.call(
+                              this._inputHistoryController,
+                              snapshot.data.all[index],
+                              index) ??
                           _historyItem(snapshot.data.all[index]),
                     );
                   },

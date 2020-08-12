@@ -9,7 +9,7 @@ import 'package:input_history_text_field/src/widget/input_history_text_field_sta
 import '../model/input_history_item.dart';
 
 typedef HistoryListItemLayoutBuilder = Widget Function(
-    InputHistoryItem value, int index);
+    InputHistoryController controller, InputHistoryItem value, int index);
 
 // ignore: must_be_immutable
 class InputHistoryTextField extends StatefulWidget {
