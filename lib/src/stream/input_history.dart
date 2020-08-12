@@ -5,7 +5,7 @@ import 'package:input_history_text_field/src/model/input_history_item.dart';
 import 'package:input_history_text_field/src/model/input_history_items.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class InputHistory {
+class InputHistoryController {
   final String _historyKey;
   final int _limit;
 
@@ -18,7 +18,7 @@ class InputHistory {
   var listEmpty = StreamController<bool>();
   var list = StreamController<InputHistoryItems>();
 
-  InputHistory(this._historyKey, this._limit) {
+  InputHistoryController(this._historyKey, this._limit) {
     this._init();
   }
 

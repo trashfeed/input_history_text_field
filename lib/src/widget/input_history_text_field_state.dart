@@ -7,7 +7,7 @@ import 'package:input_history_text_field/src/model/input_history_items.dart';
 import 'package:input_history_text_field/src/stream/input_history.dart';
 
 class InputHistoryTextFieldState extends State<InputHistoryTextField> {
-  InputHistory _inputHistory;
+  InputHistoryController _inputHistoryController;
   OverlayEntry _overlayHistoryList;
 
   @override
@@ -22,11 +22,14 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     widget.textEditingController ??= TextEditingController();
     widget.textEditingController.addListener(_onTextChange);
     widget.focusNode.addListener(_onFocusChange);
-    _inputHistory = InputHistory(widget.historyKey, widget.limit);
+    _inputHistoryController =
+        InputHistoryController(widget.historyKey, widget.limit);
   }
 
   void _onTextChange() {
-    this._inputHistory.filterHistory(widget.textEditingController.text);
+    this
+        ._inputHistoryController
+        .filterHistory(widget.textEditingController.text);
   }
 
   void _onFocusChange() {
@@ -36,13 +39,13 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
 
   void _saveHistory() {
     final text = widget.textEditingController.text;
-    _inputHistory.add(text);
+    _inputHistoryController.add(text);
   }
 
   @override
   void dispose() {
     super.dispose();
-    this._inputHistory.dispose();
+    this._inputHistoryController.dispose();
   }
 
   @override
@@ -53,10 +56,10 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   Future<void> _toggleOverlayHistoryList() async {
     this._initOverlay();
     if (!widget.focusNode.hasFocus) {
-      this._inputHistory.hide();
+      this._inputHistoryController.hide();
       return;
     }
-    this._inputHistory.toggleExpand();
+    this._inputHistoryController.toggleExpand();
   }
 
   void _initOverlay() {
@@ -70,7 +73,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     return OverlayEntry(
       builder: (context) {
         return StreamBuilder<bool>(
-          stream: this._inputHistory.listShow.stream,
+          stream: this._inputHistoryController.listShow.stream,
           builder: (context, shown) {
             if (!shown.hasData) return SizedBox.shrink();
             return Stack(
@@ -109,7 +112,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
           child: Container(
             decoration: widget.listDecoration ?? _listDecoration(),
             child: StreamBuilder<InputHistoryItems>(
-              stream: this._inputHistory.list.stream,
+              stream: this._inputHistoryController.list.stream,
               builder: (context, snapshot) {
                 if (!snapshot.hasData || snapshot.hasError || !isShow)
                   return SizedBox.shrink();
@@ -140,7 +143,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
       child: ListTile(
         onTap: () {
           widget.textEditingController.text = item.text;
-          this._inputHistory.submit();
+          this._inputHistoryController.submit();
         },
         leading: widget.showHistoryIcon ? _historyIcon() : null,
         dense: true,
@@ -154,7 +157,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
                 color: Theme.of(context).disabledColor,
                 icon: _deleteIcon(),
                 onPressed: () {
-                  _inputHistory.remove(item);
+                  _inputHistoryController.remove(item);
                 },
               )
             : null,
