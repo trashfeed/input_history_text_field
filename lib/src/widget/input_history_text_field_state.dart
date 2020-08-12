@@ -7,13 +7,14 @@ import 'package:input_history_text_field/src/model/input_history_items.dart';
 import 'package:input_history_text_field/src/stream/input_history.dart';
 
 class InputHistoryTextFieldState extends State<InputHistoryTextField> {
-  InputHistory _inputHistory;
+  InputHistoryController _inputHistoryController;
   OverlayEntry _overlayHistoryList;
 
   @override
   void initState() {
     super.initState();
     this._initWidgetState();
+    this._initController();
   }
 
   void _initWidgetState() {
@@ -22,11 +23,19 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     widget.textEditingController ??= TextEditingController();
     widget.textEditingController.addListener(_onTextChange);
     widget.focusNode.addListener(_onFocusChange);
-    _inputHistory = InputHistory(widget.historyKey, widget.limit);
+  }
+
+  void _initController() {
+    _inputHistoryController =
+        widget.inputHistoryController ?? InputHistoryController();
+    _inputHistoryController.setup(
+        widget.historyKey, widget.limit, widget.textEditingController);
   }
 
   void _onTextChange() {
-    this._inputHistory.filterHistory(widget.textEditingController.text);
+    this
+        ._inputHistoryController
+        .filterHistory(widget.textEditingController.text);
   }
 
   void _onFocusChange() {
@@ -36,13 +45,13 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
 
   void _saveHistory() {
     final text = widget.textEditingController.text;
-    _inputHistory.add(text);
+    _inputHistoryController.add(text);
   }
 
   @override
   void dispose() {
     super.dispose();
-    this._inputHistory.dispose();
+    this._inputHistoryController.dispose();
   }
 
   @override
@@ -52,8 +61,11 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
 
   Future<void> _toggleOverlayHistoryList() async {
     this._initOverlay();
-    if (!widget.focusNode.hasFocus) return;
-    this._inputHistory.toggleExpand();
+    if (!widget.focusNode.hasFocus) {
+      this._inputHistoryController.hide();
+      return;
+    }
+    this._inputHistoryController.toggleExpand();
   }
 
   void _initOverlay() {
@@ -67,7 +79,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     return OverlayEntry(
       builder: (context) {
         return StreamBuilder<bool>(
-          stream: this._inputHistory.listShow.stream,
+          stream: this._inputHistoryController.listShow.stream,
           builder: (context, shown) {
             if (!shown.hasData) return SizedBox.shrink();
             return Stack(
@@ -99,18 +111,17 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
 
   Widget _historyList(BuildContext context, RenderBox render, bool isShow) {
     final offset = render.localToGlobal(Offset.zero);
-    final adjust = 0.0;
-
+    final listOffset = widget.listOffset ?? Offset(0, 0);
     return Positioned(
-        top: offset.dy + render.size.height + adjust,
-        left: offset.dx,
+        top: offset.dy + render.size.height + listOffset.dy,
+        left: offset.dx + listOffset.dx,
         width: isShow ? render.size.width : 0,
         height: isShow ? null : 0,
         child: Material(
           child: Container(
             decoration: widget.listDecoration ?? _listDecoration(),
             child: StreamBuilder<InputHistoryItems>(
-              stream: this._inputHistory.list.stream,
+              stream: this._inputHistoryController.list.stream,
               builder: (context, snapshot) {
                 if (!snapshot.hasData || snapshot.hasError || !isShow)
                   return SizedBox.shrink();
@@ -123,7 +134,9 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
                       opacity: widget.enableOpacityGradient
                           ? 1 - index / snapshot.data.all.length
                           : 1,
-                      child: _historyItem(snapshot.data.all[index]),
+                      child: widget.historyListItemLayoutBuilder
+                              ?.call(snapshot.data.all[index], index) ??
+                          _historyItem(snapshot.data.all[index]),
                     );
                   },
                 );
@@ -136,12 +149,13 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   Widget _backdrop(BuildContext context) {
     return Positioned.fill(
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: () {
           this._toggleOverlayHistoryList();
           widget.focusNode?.unfocus();
         },
         child: Container(
-          color: const Color(0).withOpacity(0),
+          color: Colors.transparent,
         ),
       ),
     );
@@ -149,35 +163,53 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
 
   Widget _historyItem(InputHistoryItem item) {
     return Container(
-      // padding: EdgeInsets.only(left: 5, right: 5),
       decoration: widget.listRowDecoration ?? null,
       child: ListTile(
         onTap: () {
-          widget.textEditingController.text = item.text;
-          this._inputHistory.submit();
+          this._inputHistoryController.select(item.text);
         },
-        leading: widget.showHistoryIcon
-            ? Icon(
-                widget.historyIcon,
-                color: Theme.of(context).disabledColor,
-              )
-            : null,
+        leading: widget.showHistoryIcon ? _historyIcon() : null,
         dense: true,
         title: Text(
           item.textToSingleLine,
           overflow: TextOverflow.ellipsis,
+          style: widget.listTextStyle,
         ),
         trailing: widget.showDeleteIcon
             ? IconButton(
                 color: Theme.of(context).disabledColor,
-                icon: Icon(widget.deleteIcon),
+                icon: _deleteIcon(),
                 onPressed: () {
-                  _inputHistory.remove(item);
+                  _inputHistoryController.remove(item);
                 },
               )
             : null,
       ),
     );
+  }
+
+  Widget _historyIcon() {
+    return widget.historyIconTheme ??
+        Icon(
+          widget.historyIcon,
+          color: Theme.of(context).disabledColor,
+        );
+  }
+
+  Widget _deleteIcon() {
+    return widget.deleteIconTheme ??
+        Icon(
+          widget.deleteIcon,
+          color: Theme.of(context).disabledColor,
+        );
+  }
+
+  void _onTap() {
+    widget.onTap?.call();
+    if (widget.textEditingController == null) return;
+    final endPosition = widget.textEditingController.selection.end;
+    final textLength = widget.textEditingController.text.length;
+    if (endPosition == textLength) this._toggleOverlayHistoryList();
   }
 
   Widget _textField() {
@@ -222,7 +254,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         scrollPadding: widget.scrollPadding,
         dragStartBehavior: widget.dragStartBehavior,
         enableInteractiveSelection: widget.enableInteractiveSelection,
-        onTap: widget.onTap,
+        onTap: _onTap,
         buildCounter: widget.buildCounter,
         scrollController: widget.scrollController,
         scrollPhysics: widget.scrollPhysics);
