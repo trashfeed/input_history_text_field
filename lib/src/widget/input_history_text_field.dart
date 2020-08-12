@@ -82,6 +82,8 @@ class InputHistoryTextField extends StatefulWidget {
   /// docoration of input history area
   final Decoration listDecoration;
 
+  final Offset listOffset;
+
   InputHistoryTextField(
       {Key key,
       @required this.historyKey,
@@ -96,6 +98,7 @@ class InputHistoryTextField extends StatefulWidget {
       this.listDecoration,
       this.listRowDecoration,
       this.textEditingController,
+      this.listOffset,
       this.focusNode,
       this.decoration = const InputDecoration(),
       TextInputType keyboardType,

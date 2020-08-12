@@ -99,11 +99,10 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
 
   Widget _historyList(BuildContext context, RenderBox render, bool isShow) {
     final offset = render.localToGlobal(Offset.zero);
-    final adjust = 0.0;
-
+    final listOffset = widget.listOffset ?? Offset(0, 0);
     return Positioned(
-        top: offset.dy + render.size.height + adjust,
-        left: offset.dx,
+        top: offset.dy + render.size.height + listOffset.dy,
+        left: offset.dx + listOffset.dx,
         width: isShow ? render.size.width : 0,
         height: isShow ? null : 0,
         child: Material(
@@ -166,10 +165,11 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   void _onTap() {
+    widget.onTap?.call();
+    if (widget.textEditingController == null) return;
     final endPosition = widget.textEditingController.selection.end;
     final textLength = widget.textEditingController.text.length;
     if (endPosition == textLength) this._toggleOverlayHistoryList();
-    widget.onTap?.call();
   }
 
   Widget _textField() {
