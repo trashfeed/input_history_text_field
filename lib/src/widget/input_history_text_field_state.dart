@@ -52,7 +52,10 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
 
   Future<void> _toggleOverlayHistoryList() async {
     this._initOverlay();
-    if (!widget.focusNode.hasFocus) return;
+    if (!widget.focusNode.hasFocus) {
+      this._inputHistory.hide();
+      return;
+    }
     this._inputHistory.toggleExpand();
   }
 
@@ -71,10 +74,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
           builder: (context, shown) {
             if (!shown.hasData) return SizedBox.shrink();
             return Stack(
-              children: <Widget>[
-                shown.data ? _backdrop(context) : SizedBox.shrink(),
-                _historyList(context, render, shown.data)
-              ],
+              children: <Widget>[_historyList(context, render, shown.data)],
             );
           },
         );
@@ -133,23 +133,8 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         ));
   }
 
-  Widget _backdrop(BuildContext context) {
-    return Positioned.fill(
-      child: GestureDetector(
-        onTap: () {
-          this._toggleOverlayHistoryList();
-          widget.focusNode?.unfocus();
-        },
-        child: Container(
-          color: const Color(0).withOpacity(0),
-        ),
-      ),
-    );
-  }
-
   Widget _historyItem(InputHistoryItem item) {
     return Container(
-      // padding: EdgeInsets.only(left: 5, right: 5),
       decoration: widget.listRowDecoration ?? null,
       child: ListTile(
         onTap: () {
@@ -178,6 +163,13 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
             : null,
       ),
     );
+  }
+
+  void _onTap() {
+    final endPosition = widget.textEditingController.selection.end;
+    final textLength = widget.textEditingController.text.length;
+    if (endPosition == textLength) this._toggleOverlayHistoryList();
+    widget.onTap?.call();
   }
 
   Widget _textField() {
@@ -222,7 +214,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         scrollPadding: widget.scrollPadding,
         dragStartBehavior: widget.dragStartBehavior,
         enableInteractiveSelection: widget.enableInteractiveSelection,
-        onTap: widget.onTap,
+        onTap: _onTap,
         buildCounter: widget.buildCounter,
         scrollController: widget.scrollController,
         scrollPhysics: widget.scrollPhysics);
