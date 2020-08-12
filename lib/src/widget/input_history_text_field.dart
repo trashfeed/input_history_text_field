@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:input_history_text_field/src/widget/input_history_text_field_state.dart';
 
+import '../model/input_history_item.dart';
+
+typedef HistoryListItemLayoutBuilder = Widget Function(InputHistoryItem value);
+
 // ignore: must_be_immutable
 class InputHistoryTextField extends StatefulWidget {
   final String historyKey;
@@ -94,9 +98,13 @@ class InputHistoryTextField extends StatefulWidget {
   /// customize list text style
   final TextStyle listTextStyle;
 
+  /// customize list all
+  final HistoryListItemLayoutBuilder historyListItemLayoutBuilder;
+
   InputHistoryTextField(
       {Key key,
       @required this.historyKey,
+      this.historyListItemLayoutBuilder,
       this.limit = 5,
       this.hasFocusExpand = true,
       this.showHistoryIcon = true,
