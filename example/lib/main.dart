@@ -5,8 +5,6 @@ void main() {
   runApp(MyApp());
 }
 
-final _inputHistoryController = InputHistoryController();
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -49,7 +47,6 @@ class MyApp extends StatelessWidget {
                     left: BorderSide(color: Colors.red, width: 3),
                   ),
                 ),
-                inputHistoryController: _inputHistoryController,
                 listDecoration: BoxDecoration(
                   color: Colors.white60,
                   borderRadius: BorderRadius.only(
@@ -73,9 +70,9 @@ class MyApp extends StatelessWidget {
                 ),
                 listOffset: Offset(0, 5),
                 listTextStyle: TextStyle(fontSize: 30),
-                historyListItemLayoutBuilder: (value, index) {
+                historyListItemLayoutBuilder: (controller, value, index) {
                   return InkWell(
-                    onTap: () => _inputHistoryController.select(value.text),
+                    onTap: () => controller.select(value.text),
                     child: Row(
                       children: [
                         Expanded(
@@ -122,7 +119,7 @@ class MyApp extends StatelessWidget {
                             color: Theme.of(context).disabledColor,
                           ),
                           onPressed: () {
-                            _inputHistoryController.remove(value);
+                            controller.remove(value);
                           },
                         ),
                       ],

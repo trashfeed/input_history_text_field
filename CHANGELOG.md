@@ -1,3 +1,6 @@
+## [0.0.6] 2020-08-12.
+- `historyListItemLayoutBuilder` is change parameter.
+
 ## [0.0.5] 2020-08-12.
 
 * add API

@@ -120,16 +120,14 @@ InputHistoryTextField(
 | ![image](https://user-images.githubusercontent.com/885696/89996047-44d99680-dcc5-11ea-9902-841181c83906.png) |
 
 #### list layout builder
-If you want to customize everything, to use `historyListItemLayoutBuilder` or `inputHistoryController`.
+If you want to customize everything, to use `historyListItemLayoutBuilder`.
 
 ```dart
-final _inputHistoryController = InputHistoryController();
 InputHistoryTextField(
     historyKey: "01",
-    inputHistoryController: _inputHistoryController,
-    historyListItemLayoutBuilder: (value, index) {
+    historyListItemLayoutBuilder: (controller, value, index) {
         return InkWell(
-        onTap: () => _inputHistoryController.select(value.text),
+        onTap: () => controller.select(value.text),
         child: Row(
             children: [
             Expanded(
@@ -176,7 +174,7 @@ InputHistoryTextField(
                 color: Theme.of(context).disabledColor,
                 ),
                 onPressed: () {
-                _inputHistoryController.remove(value);
+                controller.remove(value);
                 },
             ),
             ],
@@ -193,22 +191,22 @@ InputHistoryTextField(
 
 
 ### API
-| name                         | ex                        |                        | note                                                                                                                 |
-| ---------------------------- | ------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| historyKey                   | `key-01`                  | String                 | a only key in the your application,saved with this key.                                                              |
-| limit                        | `5`                       | int                    | max limit of input history                                                                                           |
-| hasFocusExpand               | `true`                    | bool                   | show input history of edit text focused                                                                              |
-| showHistoryIcon              | `true`                    | bool                   | icon of input history at left positioned                                                                             |
-| showDeleteIcon               | `true`                    | bool                   | icon of delete at right positioned                                                                                   |
-| enableHistory                | `true`                    | bool                   | enabled/disabled of input history                                                                                    |
-| enableOpacityGradient        | `true`                    | bool                   | make the input history list gradually transparent                                                                    |
-| historyIcon                  | `Icons.add`               | IconData               | `IconData` for history icon.                                                                                         |
-| historyIconTheme             | `IconTheme`               | IconTheme              | `IconTheme` for history icon.                                                                                        |
-| deleteIcon                   | `Icons.delete`            | IconData               | `IconData` for delete icon.                                                                                          |
-| deleteIconTheme              | `IconTheme`               | IconTheme              | `IconTheme` for delete icon.                                                                                         |
-| listOffset                   | `Offset(0, 5)`            | Offset                 | set a position for list.                                                                                             |
-| listTextStyle                | `TextStyle(fontSize: 30)` | TextStyle              | sets a text style for list.                                                                                          |
-| listRowDecoration            | `BoxDecoration`           | Decoration             | a row of input history for decoration                                                                                |
-| listDecoration               | `BoxDecoration`           | Decoration             | a list of input history for decoration                                                                               |
-| historyListItemLayoutBuilder | `Widget`                  | Widget                 | a customize full layout. It is necessary to use `InputHistoryController` to select and delete the input history list |
-| InputHistoryController       | `InputHistoryController`  | InputHistoryController | Select or delete the input history list                                                                              |
+| name                         | ex                        |                        | note                                                    |
+| ---------------------------- | ------------------------- | ---------------------- | ------------------------------------------------------- |
+| historyKey                   | `key-01`                  | String                 | a only key in the your application,saved with this key. |
+| limit                        | `5`                       | int                    | max limit of input history                              |
+| hasFocusExpand               | `true`                    | bool                   | show input history of edit text focused                 |
+| showHistoryIcon              | `true`                    | bool                   | icon of input history at left positioned                |
+| showDeleteIcon               | `true`                    | bool                   | icon of delete at right positioned                      |
+| enableHistory                | `true`                    | bool                   | enabled/disabled of input history                       |
+| enableOpacityGradient        | `true`                    | bool                   | make the input history list gradually transparent       |
+| historyIcon                  | `Icons.add`               | IconData               | `IconData` for history icon.                            |
+| historyIconTheme             | `IconTheme`               | IconTheme              | `IconTheme` for history icon.                           |
+| deleteIcon                   | `Icons.delete`            | IconData               | `IconData` for delete icon.                             |
+| deleteIconTheme              | `IconTheme`               | IconTheme              | `IconTheme` for delete icon.                            |
+| listOffset                   | `Offset(0, 5)`            | Offset                 | set a position for list.                                |
+| listTextStyle                | `TextStyle(fontSize: 30)` | TextStyle              | sets a text style for list.                             |
+| listRowDecoration            | `BoxDecoration`           | Decoration             | a row of input history for decoration                   |
+| listDecoration               | `BoxDecoration`           | Decoration             | a list of input history for decoration                  |
+| historyListItemLayoutBuilder | `Widget`                  | Widget                 | a customize full layout.                                |
+| InputHistoryController       | `InputHistoryController`  | InputHistoryController | Select or delete the input history list                 |
