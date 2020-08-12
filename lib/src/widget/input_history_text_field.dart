@@ -3,11 +3,13 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:input_history_text_field/src/stream/input_history.dart';
 import 'package:input_history_text_field/src/widget/input_history_text_field_state.dart';
 
 import '../model/input_history_item.dart';
 
-typedef HistoryListItemLayoutBuilder = Widget Function(InputHistoryItem value);
+typedef HistoryListItemLayoutBuilder = Widget Function(
+    InputHistoryItem value, int index);
 
 // ignore: must_be_immutable
 class InputHistoryTextField extends StatefulWidget {
@@ -101,10 +103,14 @@ class InputHistoryTextField extends StatefulWidget {
   /// customize list all
   final HistoryListItemLayoutBuilder historyListItemLayoutBuilder;
 
+  /// controller
+  final InputHistoryController inputHistoryController;
+
   InputHistoryTextField(
       {Key key,
       @required this.historyKey,
       this.historyListItemLayoutBuilder,
+      this.inputHistoryController,
       this.limit = 5,
       this.hasFocusExpand = true,
       this.showHistoryIcon = true,

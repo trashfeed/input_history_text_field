@@ -1,13 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:input_history_text_field/src/model/input_history_item.dart';
 import 'package:input_history_text_field/src/model/input_history_items.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InputHistoryController {
-  final String _historyKey;
-  final int _limit;
+  String _historyKey;
+  int _limit;
+  TextEditingController _textEditingController;
 
   bool _isShow = false;
   InputHistoryItems _histories;
@@ -18,7 +20,12 @@ class InputHistoryController {
   var listEmpty = StreamController<bool>();
   var list = StreamController<InputHistoryItems>();
 
-  InputHistoryController(this._historyKey, this._limit) {
+  InputHistoryController();
+
+  void setup(String historyKey, int limit, _textEditingController) {
+    this._historyKey = historyKey;
+    this._limit = limit;
+    this._textEditingController = _textEditingController;
     this._init();
   }
 
@@ -142,7 +149,8 @@ class InputHistoryController {
     this.listEmpty.sink.add(filterdHistoryItems.isEmpty);
   }
 
-  void submit() {
+  void select(String text) {
+    this._textEditingController.text = text;
     this.hide();
   }
 }
