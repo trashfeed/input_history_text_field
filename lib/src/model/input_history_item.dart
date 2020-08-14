@@ -4,6 +4,12 @@ class InputHistoryItem {
   int pinnedTime;
 
   String get textToSingleLine => text.replaceAll("\n", "").replaceAll(" ", "");
+  String get createdTimeLabel {
+    var dt = DateTime.fromMillisecondsSinceEpoch(this.createdTime)
+        .toLocal()
+        .toString();
+    return dt.substring(0, dt.lastIndexOf("."));
+  }
 
   InputHistoryItem(String text) {
     this.text = text;

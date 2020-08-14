@@ -23,12 +23,24 @@ class MyApp extends StatelessWidget {
           child: Column(
             children: <Widget>[
               /// sample1
-              /// - basic
+              /// - list
               InputHistoryTextField(
                 historyKey: "01",
+                listStyle: ListStyle.List,
               ),
 
-              /// sampe2
+              /// sample2
+              /// - badge
+              InputHistoryTextField(
+                historyKey: "03",
+                listStyle: ListStyle.Badge,
+                showHistoryIcon: false,
+                badgeColor: Colors.lightBlue,
+                textColor: Colors.white,
+                deleteIconColor: Colors.white,
+              ),
+
+              /// sampe3
               /// - customize
               InputHistoryTextField(
                 historyKey: "02",
@@ -100,10 +112,7 @@ class MyApp extends StatelessWidget {
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                            value.createdTime)
-                                        .toUtc()
-                                        .toString(),
+                                    value.createdTimeLabel,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         fontSize: 10,
