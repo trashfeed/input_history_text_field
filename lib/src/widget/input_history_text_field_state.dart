@@ -164,28 +164,44 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   Widget _historyItem(InputHistoryItem item) {
-    return Container(
-      decoration: widget.listRowDecoration ?? null,
-      child: ListTile(
-        onTap: () {
-          this._inputHistoryController.select(item.text);
-        },
-        leading: widget.showHistoryIcon ? _historyIcon() : null,
-        dense: true,
-        title: Text(
-          item.textToSingleLine,
-          overflow: TextOverflow.ellipsis,
-          style: widget.listTextStyle,
-        ),
-        trailing: widget.showDeleteIcon
-            ? IconButton(
+    return InkWell(
+      onTap: () => this._inputHistoryController.select(item.text),
+      child: Container(
+        padding: EdgeInsets.only(left: 10),
+        decoration: widget.listRowDecoration ?? null,
+        child: Row(
+          children: [
+            /// history icon
+            if (widget.showHistoryIcon) _historyIcon(),
+
+            /// text
+            __historyItemText(item),
+
+            /// remove icon
+            if (widget.showDeleteIcon)
+              IconButton(
                 color: Theme.of(context).disabledColor,
                 icon: _deleteIcon(),
                 onPressed: () {
                   _inputHistoryController.remove(item);
                 },
-              )
-            : null,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget __historyItemText(InputHistoryItem item) {
+    return Expanded(
+      flex: 1,
+      child: Container(
+        margin: const EdgeInsets.only(left: 10.0),
+        child: Text(
+          item.textToSingleLine,
+          overflow: TextOverflow.ellipsis,
+          style: widget.listTextStyle,
+        ),
       ),
     );
   }
@@ -194,6 +210,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     return widget.historyIconTheme ??
         Icon(
           widget.historyIcon,
+          size: 18,
           color: Theme.of(context).disabledColor,
         );
   }
@@ -202,6 +219,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     return widget.deleteIconTheme ??
         Icon(
           widget.deleteIcon,
+          size: 18,
           color: Theme.of(context).disabledColor,
         );
   }
