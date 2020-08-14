@@ -2,15 +2,29 @@
 A `input_history_text_field` widget is show type history to users  as they type.
 
 # Overview
+## List
 
-| Simple                                                                                                       | Customize                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| ![image](https://user-images.githubusercontent.com/885696/89993604-eced6080-dcc1-11ea-8dbb-e2e12029d3de.png) | ![image](https://user-images.githubusercontent.com/885696/89993579-e19a3500-dcc1-11ea-895f-e8eae5288017.png) |
+| List                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------ |
+| ![image](https://user-images.githubusercontent.com/885696/89993604-eced6080-dcc1-11ea-8dbb-e2e12029d3de.png) |
+
+## Badge
+| Badge                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------ |
+| ![image](https://user-images.githubusercontent.com/885696/90236027-29a18f00-de5d-11ea-9108-2a4f4439c979.png) |
+
+
+
+## Customize
+| Customize                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------ |
+| ![image](https://user-images.githubusercontent.com/885696/89993579-e19a3500-dcc1-11ea-895f-e8eae5288017.png) |
+
 
 ## Getting Started
 
 ### Usage
-The only key in the your application set to `historyKey`, supports like a `text_field`.
+The only key in the your widget of application set to `historyKey`, supports like a `text_field`.
 
 ```dart
 InputHistoryTextField(
@@ -119,6 +133,18 @@ InputHistoryTextField(
 | ------------------------------------------------------------------------------------------------------------ |
 | ![image](https://user-images.githubusercontent.com/885696/89996047-44d99680-dcc5-11ea-9902-841181c83906.png) |
 
+
+#### badge style
+Change style to badge is `listStyle` = `ListStyle.Badge` 
+
+```dart
+InputHistoryTextField(
+    historyKey: "01",
+    listStyle: ListStyle.Badge,
+),
+
+```
+
 #### list layout builder
 If you want to customize everything, to use `historyListItemLayoutBuilder`.
 
@@ -208,5 +234,10 @@ InputHistoryTextField(
 | listTextStyle                | `TextStyle(fontSize: 30)` | TextStyle              | sets a text style for list.                             |
 | listRowDecoration            | `BoxDecoration`           | Decoration             | a row of input history for decoration                   |
 | listDecoration               | `BoxDecoration`           | Decoration             | a list of input history for decoration                  |
+| listStyle                    | `ListStyle.List`          | ListStyle              | change style `List` or `Badge`                          |
+| textColor                    | `Colors.black`            | Color                  | a text color                                            |
+| badgeColor                   | `Colors.grey`             | Color                  | a badge color                                           |
+| historyIconColor             | `Colors.white`            | Color                  | a history icon color                                    |
+| deleteIconColor              | `Colors.white`            | Color                  | a delete icon color                                     |
 | historyListItemLayoutBuilder | `Widget`                  | Widget                 | a customize full layout.                                |
 | InputHistoryController       | `InputHistoryController`  | InputHistoryController | Select or delete the input history list                 |
