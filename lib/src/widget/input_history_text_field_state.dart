@@ -113,39 +113,84 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     final offset = render.localToGlobal(Offset.zero);
     final listOffset = widget.listOffset ?? Offset(0, 0);
     return Positioned(
-        top: offset.dy + render.size.height + listOffset.dy,
+        top: offset.dy +
+            render.size.height +
+            (widget.listStyle == ListStyle.Badge
+                ? listOffset.dy + 10
+                : listOffset.dy),
         left: offset.dx + listOffset.dx,
         width: isShow ? render.size.width : 0,
         height: isShow ? null : 0,
         child: Material(
           child: Container(
-            decoration: widget.listDecoration ?? _listDecoration(),
+            decoration: widget.listStyle == ListStyle.Badge
+                ? null
+                : widget.listDecoration ?? _listDecoration(),
             child: StreamBuilder<InputHistoryItems>(
               stream: this._inputHistoryController.list.stream,
               builder: (context, snapshot) {
                 if (!snapshot.hasData || snapshot.hasError || !isShow)
                   return SizedBox.shrink();
-                return ListView.builder(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(0),
-                  itemCount: snapshot.data.all.length,
-                  itemBuilder: (context, index) {
-                    return Opacity(
-                      opacity: widget.enableOpacityGradient
-                          ? 1 - index / snapshot.data.all.length
-                          : 1,
-                      child: widget.historyListItemLayoutBuilder?.call(
-                              this._inputHistoryController,
-                              snapshot.data.all[index],
-                              index) ??
-                          _historyItem(snapshot.data.all[index]),
-                    );
-                  },
-                );
+                if (widget.listStyle == ListStyle.Badge) {
+                  return Wrap(
+                    children: [
+                      for (var item in snapshot.data.all)
+                        _badgeHistoryItem(item)
+                    ],
+                  );
+                } else {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(0),
+                    itemCount: snapshot.data.all.length,
+                    itemBuilder: (context, index) {
+                      return Opacity(
+                        opacity: widget.enableOpacityGradient
+                            ? 1 - index / snapshot.data.all.length
+                            : 1,
+                        child: widget.historyListItemLayoutBuilder?.call(
+                                this._inputHistoryController,
+                                snapshot.data.all[index],
+                                index) ??
+                            _listHistoryItem(snapshot.data.all[index]),
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),
         ));
+  }
+
+  Widget _badgeHistoryItem(item) {
+    return Flexible(
+      child: Container(
+        margin: EdgeInsets.only(right: 5, bottom: 5),
+        padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+        decoration: BoxDecoration(
+          color: widget.badgeColor ??
+              Theme.of(context).disabledColor.withAlpha(20),
+          borderRadius: BorderRadius.all(Radius.circular(90)),
+        ),
+        child: InkWell(
+          onTap: () => this._inputHistoryController.select(item.text),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              /// history icon
+              if (widget.showHistoryIcon) _historyIcon(),
+
+              /// text
+              _badgeHistoryItemText(item),
+
+              /// remove icon
+              if (widget.showDeleteIcon) _deleteIcon(item)
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _backdrop(BuildContext context) {
@@ -163,11 +208,11 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     );
   }
 
-  Widget _historyItem(InputHistoryItem item) {
+  Widget _listHistoryItem(InputHistoryItem item) {
     return InkWell(
       onTap: () => this._inputHistoryController.select(item.text),
       child: Container(
-        padding: EdgeInsets.only(left: 10),
+        padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
         decoration: widget.listRowDecoration ?? null,
         child: Row(
           children: [
@@ -175,53 +220,72 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
             if (widget.showHistoryIcon) _historyIcon(),
 
             /// text
-            __historyItemText(item),
+            _listHistoryItemText(item),
 
             /// remove icon
-            if (widget.showDeleteIcon)
-              IconButton(
-                color: Theme.of(context).disabledColor,
-                icon: _deleteIcon(),
-                onPressed: () {
-                  _inputHistoryController.remove(item);
-                },
-              ),
+            if (widget.showDeleteIcon) _deleteIcon(item)
           ],
         ),
       ),
     );
   }
 
-  Widget __historyItemText(InputHistoryItem item) {
+  Widget _listHistoryItemText(InputHistoryItem item) {
     return Expanded(
       flex: 1,
       child: Container(
-        margin: const EdgeInsets.only(left: 10.0),
-        child: Text(
-          item.textToSingleLine,
-          overflow: TextOverflow.ellipsis,
-          style: widget.listTextStyle,
-        ),
-      ),
+          margin: const EdgeInsets.only(left: 5.0),
+          child: this._historyItemText(item)),
     );
   }
 
-  Widget _historyIcon() {
-    return widget.historyIconTheme ??
-        Icon(
-          widget.historyIcon,
-          size: 18,
-          color: Theme.of(context).disabledColor,
-        );
+  Widget _badgeHistoryItemText(InputHistoryItem item) {
+    return Flexible(
+      flex: 1,
+      child: Container(child: this._historyItemText(item)),
+    );
   }
 
-  Widget _deleteIcon() {
-    return widget.deleteIconTheme ??
-        Icon(
-          widget.deleteIcon,
-          size: 18,
-          color: Theme.of(context).disabledColor,
-        );
+  Widget _historyItemText(InputHistoryItem item) {
+    return Text(item.textToSingleLine,
+        overflow: TextOverflow.ellipsis,
+        style: widget.listTextStyle ??
+            TextStyle(
+                color: widget.textColor ??
+                    Theme.of(context).textTheme.bodyText1.color));
+  }
+
+  Widget _historyIcon() {
+    return SizedBox(
+      width: 22,
+      height: 22,
+      child: widget.historyIconTheme ??
+          Icon(
+            widget.historyIcon,
+            size: 18,
+            color: widget.historyIconColor ?? Theme.of(context).disabledColor,
+          ),
+    );
+  }
+
+  Widget _deleteIcon(InputHistoryItem item) {
+    return SizedBox(
+      width: 22,
+      height: 22,
+      child: IconButton(
+        padding: const EdgeInsets.all(0.0),
+        color: Theme.of(context).disabledColor,
+        icon: widget.deleteIconTheme ??
+            Icon(
+              widget.deleteIcon,
+              size: 18,
+              color: widget.deleteIconColor ?? Theme.of(context).disabledColor,
+            ),
+        onPressed: () {
+          _inputHistoryController.remove(item);
+        },
+      ),
+    );
   }
 
   void _onTap() {

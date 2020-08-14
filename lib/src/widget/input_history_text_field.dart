@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:input_history_text_field/input_history_text_field.dart';
 import 'package:input_history_text_field/src/stream/input_history.dart';
 import 'package:input_history_text_field/src/widget/input_history_text_field_state.dart';
 
@@ -10,6 +11,11 @@ import '../model/input_history_item.dart';
 
 typedef HistoryListItemLayoutBuilder = Widget Function(
     InputHistoryController controller, InputHistoryItem value, int index);
+
+enum ListStyle {
+  List,
+  Badge,
+}
 
 // ignore: must_be_immutable
 class InputHistoryTextField extends StatefulWidget {
@@ -106,6 +112,21 @@ class InputHistoryTextField extends StatefulWidget {
   /// controller
   final InputHistoryController inputHistoryController;
 
+  /// style List or Badge
+  final ListStyle listStyle;
+
+  /// font color
+  final Color textColor;
+
+  /// Badge background color
+  final Color badgeColor;
+
+  /// history icon color
+  final Color historyIconColor;
+
+  /// delete icon color
+  final Color deleteIconColor;
+
   InputHistoryTextField(
       {Key key,
       @required this.historyKey,
@@ -119,6 +140,11 @@ class InputHistoryTextField extends StatefulWidget {
       this.enableHistory = true,
       this.historyIcon = Icons.history,
       this.deleteIcon = Icons.close,
+      this.listStyle = ListStyle.List,
+      this.badgeColor,
+      this.textColor,
+      this.historyIconColor,
+      this.deleteIconColor,
       this.listDecoration,
       this.listRowDecoration,
       this.textEditingController,
