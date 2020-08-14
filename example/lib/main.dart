@@ -100,10 +100,7 @@ class MyApp extends StatelessWidget {
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                            value.createdTime)
-                                        .toUtc()
-                                        .toString(),
+                                    value.createdTimeLabel,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         fontSize: 10,
