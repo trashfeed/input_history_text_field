@@ -1,3 +1,13 @@
+## [0.0.8] 2020-08-14.
+- add style to badge, set a `listStyle` = `ListStyle.Badge` .
+- add some API.
+  - `listStyle`
+  - `textColor`
+  - `badgeColor`
+  - `historyIconColor`
+  - `deleteIconColor`
+
+
 ## [0.0.6] 2020-08-12.
 - `historyListItemLayoutBuilder` is change parameter.
 
