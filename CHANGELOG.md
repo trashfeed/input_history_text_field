@@ -1,4 +1,11 @@
-## [0.0.8] 2020-08-14.
+## [0.0.7] 2020-08-16.
+- deprecated `badgeColor`. use `backgroundColor` instead.
+- add `enableSave`
+  - `false` is not saved;
+- add `lockItems`,`lockTextColor`,`lockBackgroundColor`
+  - If there is an item you want to display from the beginning or an item you want the user to selected.
+
+## [0.0.7] 2020-08-14.
 - add style to badge, set a `listStyle` = `ListStyle.Badge` .
 - add some API.
   - `listStyle`
