@@ -136,6 +136,12 @@ class InputHistoryTextField extends StatefulWidget {
 
   final List<String> lockItems;
 
+  /// lock item background color
+  final Color lockBackgroundColor;
+
+  /// lock item font color
+  final Color lockTextColor;
+
   InputHistoryTextField(
       {Key key,
       @required this.historyKey,
@@ -161,6 +167,8 @@ class InputHistoryTextField extends StatefulWidget {
       this.textEditingController,
       this.listOffset,
       this.lockItems,
+      this.lockTextColor,
+      this.lockBackgroundColor,
       this.historyIconTheme,
       this.deleteIconTheme,
       this.listTextStyle,

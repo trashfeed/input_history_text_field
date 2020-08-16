@@ -171,7 +171,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         margin: EdgeInsets.only(right: 5, bottom: 5),
         padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
         decoration: BoxDecoration(
-          color: widget.backgroundColor ??
+          color: this._backgroundColor(item) ??
               widget.badgeColor ??
               Theme.of(context).disabledColor.withAlpha(20),
           borderRadius: BorderRadius.all(Radius.circular(90)),
@@ -262,8 +262,18 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         overflow: TextOverflow.ellipsis,
         style: widget.listTextStyle ??
             TextStyle(
-                color: widget.textColor ??
+                color: this._textColor(item) ??
                     Theme.of(context).textTheme.bodyText1.color));
+  }
+
+  Color _textColor(InputHistoryItem item) {
+    if (item.isLock) return widget.lockTextColor;
+    return widget.textColor;
+  }
+
+  Color _backgroundColor(InputHistoryItem item) {
+    if (item.isLock) return widget.lockBackgroundColor;
+    return widget.backgroundColor;
   }
 
   Widget _historyIcon() {
