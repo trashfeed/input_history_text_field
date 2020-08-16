@@ -236,7 +236,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   Decoration _listHistoryItemDecoration(InputHistoryItem item) {
     if (widget.listRowDecoration != null) return widget.listRowDecoration;
     if (widget.backgroundColor != null) {
-      return BoxDecoration(color: widget.backgroundColor);
+      return BoxDecoration(color: _backgroundColor(item));
     }
     return null;
   }
