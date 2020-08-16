@@ -119,7 +119,11 @@ class InputHistoryTextField extends StatefulWidget {
   final Color textColor;
 
   /// Badge background color
+  @Deprecated('use `backgroundColor` instead ')
   final Color badgeColor;
+
+  /// background color
+  final Color backgroundColor;
 
   /// history icon color
   final Color historyIconColor;
@@ -141,7 +145,8 @@ class InputHistoryTextField extends StatefulWidget {
       this.historyIcon = Icons.history,
       this.deleteIcon = Icons.close,
       this.listStyle = ListStyle.List,
-      this.badgeColor,
+      @Deprecated('use `backgroundColor` instead ') this.badgeColor,
+      this.backgroundColor,
       this.textColor,
       this.historyIconColor,
       this.deleteIconColor,

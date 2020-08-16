@@ -169,7 +169,8 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         margin: EdgeInsets.only(right: 5, bottom: 5),
         padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
         decoration: BoxDecoration(
-          color: widget.badgeColor ??
+          color: widget.backgroundColor ??
+              widget.badgeColor ??
               Theme.of(context).disabledColor.withAlpha(20),
           borderRadius: BorderRadius.all(Radius.circular(90)),
         ),
@@ -213,7 +214,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
       onTap: () => this._inputHistoryController.select(item.text),
       child: Container(
         padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
-        decoration: widget.listRowDecoration ?? null,
+        decoration: _listHistoryItemDecoration(item),
         child: Row(
           children: [
             /// history icon
@@ -228,6 +229,14 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         ),
       ),
     );
+  }
+
+  Decoration _listHistoryItemDecoration(InputHistoryItem item) {
+    if (widget.listRowDecoration != null) return widget.listRowDecoration;
+    if (widget.backgroundColor != null) {
+      return BoxDecoration(color: widget.backgroundColor);
+    }
+    return null;
   }
 
   Widget _listHistoryItemText(InputHistoryItem item) {
