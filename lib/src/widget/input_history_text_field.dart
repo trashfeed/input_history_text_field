@@ -79,6 +79,9 @@ class InputHistoryTextField extends StatefulWidget {
   // enabled/disabled of input history
   final bool enableHistory;
 
+  // enabled/disabled saved history
+  final bool enableSave;
+
   /// make the input history list gradually transparent
   final bool enableOpacityGradient;
 
@@ -142,6 +145,7 @@ class InputHistoryTextField extends StatefulWidget {
       this.showDeleteIcon = true,
       this.enableOpacityGradient = false,
       this.enableHistory = true,
+      this.enableSave = true,
       this.historyIcon = Icons.history,
       this.deleteIcon = Icons.close,
       this.listStyle = ListStyle.List,
