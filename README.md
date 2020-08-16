@@ -1,21 +1,21 @@
 # input_history_text_field
-A `input_history_text_field` widget is show type history to users  as they type.
+A input_history_text_field widget is automatically saved and suggest as you type.
 
 # Overview
-## List
 
 | List                                                                                                         |
 | ------------------------------------------------------------------------------------------------------------ |
 | ![image](https://user-images.githubusercontent.com/885696/89993604-eced6080-dcc1-11ea-8dbb-e2e12029d3de.png) |
 
-## Badge
 | Badge                                                                                                        |
 | ------------------------------------------------------------------------------------------------------------ |
 | ![image](https://user-images.githubusercontent.com/885696/90236027-29a18f00-de5d-11ea-9108-2a4f4439c979.png) |
 
+| Default items(cannot be delete)                                                                              |
+| ------------------------------------------------------------------------------------------------------------ |
+| ![image](https://user-images.githubusercontent.com/885696/90325805-4d7ae700-dfbb-11ea-99ef-06c419875a5e.png) |
 
 
-## Customize
 | Customize                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------ |
 | ![image](https://user-images.githubusercontent.com/885696/89993579-e19a3500-dcc1-11ea-895f-e8eae5288017.png) |
@@ -54,6 +54,39 @@ InputHistoryTextField(
     historyKey: "01",
 ),
 ```
+
+#### badge style
+Change style to badge is `listStyle` = `ListStyle.Badge` 
+
+```dart
+InputHistoryTextField(
+    historyKey: "01",
+    listStyle: ListStyle.Badge,
+),
+
+```
+
+| &nbsp;                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------ |
+| ![image](https://user-images.githubusercontent.com/885696/90236027-29a18f00-de5d-11ea-9108-2a4f4439c979.png) |
+
+
+#### Default items
+If there is an item you want to display from the beginning or an item you want the user to selected.
+
+```dart
+InputHistoryTextField(
+    historyKey: "01",
+    lockItems: ['Flutter', 'Rails', 'React', 'Vue'],
+),
+
+```
+
+| List                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------ |
+| ![image](https://user-images.githubusercontent.com/885696/90325929-de05f700-dfbc-11ea-962e-466f9a0c4676.png) |
+
+
 
 ### change icon
 Can hide or change the icon.
@@ -134,17 +167,6 @@ InputHistoryTextField(
 | ![image](https://user-images.githubusercontent.com/885696/89996047-44d99680-dcc5-11ea-9902-841181c83906.png) |
 
 
-#### badge style
-Change style to badge is `listStyle` = `ListStyle.Badge` 
-
-```dart
-InputHistoryTextField(
-    historyKey: "01",
-    listStyle: ListStyle.Badge,
-),
-
-```
-
 #### list layout builder
 If you want to customize everything, to use `historyListItemLayoutBuilder`.
 
@@ -217,27 +239,32 @@ InputHistoryTextField(
 
 
 ### API
-| name                         | ex                        |                        | note                                                    |
-| ---------------------------- | ------------------------- | ---------------------- | ------------------------------------------------------- |
-| historyKey                   | `key-01`                  | String                 | a only key in the your application,saved with this key. |
-| limit                        | `5`                       | int                    | max limit of input history                              |
-| hasFocusExpand               | `true`                    | bool                   | show input history of edit text focused                 |
-| showHistoryIcon              | `true`                    | bool                   | icon of input history at left positioned                |
-| showDeleteIcon               | `true`                    | bool                   | icon of delete at right positioned                      |
-| enableHistory                | `true`                    | bool                   | enabled/disabled of input history                       |
-| enableOpacityGradient        | `true`                    | bool                   | make the input history list gradually transparent       |
-| historyIcon                  | `Icons.add`               | IconData               | `IconData` for history icon.                            |
-| historyIconTheme             | `IconTheme`               | IconTheme              | `IconTheme` for history icon.                           |
-| deleteIcon                   | `Icons.delete`            | IconData               | `IconData` for delete icon.                             |
-| deleteIconTheme              | `IconTheme`               | IconTheme              | `IconTheme` for delete icon.                            |
-| listOffset                   | `Offset(0, 5)`            | Offset                 | set a position for list.                                |
-| listTextStyle                | `TextStyle(fontSize: 30)` | TextStyle              | sets a text style for list.                             |
-| listRowDecoration            | `BoxDecoration`           | Decoration             | a row of input history for decoration                   |
-| listDecoration               | `BoxDecoration`           | Decoration             | a list of input history for decoration                  |
-| listStyle                    | `ListStyle.List`          | ListStyle              | change style `List` or `Badge`                          |
-| textColor                    | `Colors.black`            | Color                  | a text color                                            |
-| badgeColor                   | `Colors.grey`             | Color                  | a badge color                                           |
-| historyIconColor             | `Colors.white`            | Color                  | a history icon color                                    |
-| deleteIconColor              | `Colors.white`            | Color                  | a delete icon color                                     |
-| historyListItemLayoutBuilder | `Widget`                  | Widget                 | a customize full layout.                                |
-| InputHistoryController       | `InputHistoryController`  | InputHistoryController | Select or delete the input history list                 |
+| name                                | ex                                     |                        | note                                                    |
+| ----------------------------------- | -------------------------------------- | ---------------------- | ------------------------------------------------------- |
+| historyKey                          | `key-01`                               | String                 | a only key in the your application,saved with this key. |
+| limit                               | `5`                                    | int                    | max limit of input history                              |
+| hasFocusExpand                      | `true`                                 | bool                   | show input history of edit text focused                 |
+| showHistoryIcon                     | `true`                                 | bool                   | icon of input history at left positioned                |
+| showDeleteIcon                      | `true`                                 | bool                   | icon of delete at right positioned                      |
+| enableHistory                       | `true`                                 | bool                   | enabled/disabled of input history                       |
+| enableSave                          | `true`                                 | bool                   | enabled/disabled saved history                          |
+| enableOpacityGradient               | `true`                                 | bool                   | make the input history list gradually transparent       |
+| historyIcon                         | `Icons.add`                            | IconData               | `IconData` for history icon.                            |
+| historyIconTheme                    | `IconTheme`                            | IconTheme              | `IconTheme` for history icon.                           |
+| deleteIcon                          | `Icons.delete`                         | IconData               | `IconData` for delete icon.                             |
+| deleteIconTheme                     | `IconTheme`                            | IconTheme              | `IconTheme` for delete icon.                            |
+| listOffset                          | `Offset(0, 5)`                         | Offset                 | set a position for list.                                |
+| listTextStyle                       | `TextStyle(fontSize: 30)`              | TextStyle              | sets a text style for list.                             |
+| listRowDecoration                   | `BoxDecoration`                        | Decoration             | a row of input history for decoration                   |
+| listDecoration                      | `BoxDecoration`                        | Decoration             | a list of input history for decoration                  |
+| listStyle                           | `ListStyle.List`                       | ListStyle              | change style `List` or `Badge`                          |
+| textColor                           | `Colors.black`                         | Color                  | a text color                                            |
+| backGroundColor                     | `Colors.grey`                          | Color                  | a background color                                      |
+| historyIconColor                    | `Colors.white`                         | Color                  | a history icon color                                    |
+| deleteIconColor                     | `Colors.white`                         | Color                  | a delete icon color                                     |
+| lockItems                           | `['Flutter', 'Rails', 'React', 'Vue']` | List<String>           |
+| fixed shown, cannot be delete items |
+| lockTextColor                       | `Colors.black`                         | Color                  | a lock items text color                                 |
+| lockBackgroundColor                 | `Colors.grey`                          | Color                  | a lock items background color                           |
+| historyListItemLayoutBuilder        | `Widget`                               | Widget                 | a customize full layout.                                |
+| InputHistoryController              | `InputHistoryController`               | InputHistoryController | Select or delete the input history list                 |
