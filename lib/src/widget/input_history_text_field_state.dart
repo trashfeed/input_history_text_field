@@ -29,7 +29,8 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     _inputHistoryController =
         widget.inputHistoryController ?? InputHistoryController();
     _inputHistoryController.setup(
-        widget.historyKey, widget.limit, widget.textEditingController);
+        widget.historyKey, widget.limit, widget.textEditingController,
+        lockItems: widget.lockItems);
   }
 
   void _onTextChange() {
@@ -44,6 +45,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   void _saveHistory() {
+    if (!widget.enableSave) return;
     final text = widget.textEditingController.text;
     _inputHistoryController.add(text);
   }
@@ -169,7 +171,8 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         margin: EdgeInsets.only(right: 5, bottom: 5),
         padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
         decoration: BoxDecoration(
-          color: widget.badgeColor ??
+          color: this._backgroundColor(item) ??
+              widget.badgeColor ??
               Theme.of(context).disabledColor.withAlpha(20),
           borderRadius: BorderRadius.all(Radius.circular(90)),
         ),
@@ -213,7 +216,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
       onTap: () => this._inputHistoryController.select(item.text),
       child: Container(
         padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
-        decoration: widget.listRowDecoration ?? null,
+        decoration: _listHistoryItemDecoration(item),
         child: Row(
           children: [
             /// history icon
@@ -228,6 +231,14 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         ),
       ),
     );
+  }
+
+  Decoration _listHistoryItemDecoration(InputHistoryItem item) {
+    if (widget.listRowDecoration != null) return widget.listRowDecoration;
+    if (widget.backgroundColor != null) {
+      return BoxDecoration(color: _backgroundColor(item));
+    }
+    return null;
   }
 
   Widget _listHistoryItemText(InputHistoryItem item) {
@@ -251,8 +262,18 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         overflow: TextOverflow.ellipsis,
         style: widget.listTextStyle ??
             TextStyle(
-                color: widget.textColor ??
+                color: this._textColor(item) ??
                     Theme.of(context).textTheme.bodyText1.color));
+  }
+
+  Color _textColor(InputHistoryItem item) {
+    if (item.isLock) return widget.lockTextColor;
+    return widget.textColor;
+  }
+
+  Color _backgroundColor(InputHistoryItem item) {
+    if (item.isLock) return widget.lockBackgroundColor;
+    return widget.backgroundColor;
   }
 
   Widget _historyIcon() {
@@ -269,6 +290,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   Widget _deleteIcon(InputHistoryItem item) {
+    if (item.isLock) return SizedBox.shrink();
     return SizedBox(
       width: 22,
       height: 22,

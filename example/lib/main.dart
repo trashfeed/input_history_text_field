@@ -35,12 +35,26 @@ class MyApp extends StatelessWidget {
                 historyKey: "03",
                 listStyle: ListStyle.Badge,
                 showHistoryIcon: false,
-                badgeColor: Colors.lightBlue,
+                backgroundColor: Colors.lightBlue,
                 textColor: Colors.white,
                 deleteIconColor: Colors.white,
               ),
 
-              /// sampe3
+              /// sample3
+              /// - lock item
+              InputHistoryTextField(
+                historyKey: "04",
+                listStyle: ListStyle.List,
+                lockBackgroundColor: Colors.grey.withAlpha(50),
+                lockTextColor: Colors.black,
+                lockItems: ['Flutter', 'Rails', 'React', 'Vue'],
+                showHistoryIcon: false,
+                deleteIconColor: Colors.white,
+                textColor: Colors.white,
+                backgroundColor: Colors.lightBlue,
+              ),
+
+              /// sampe4
               /// - customize
               InputHistoryTextField(
                 historyKey: "02",

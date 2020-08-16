@@ -10,9 +10,13 @@ class InputHistoryItems {
 
   void addByText(String text) {
     if (!this._validate(text)) return;
-    if (_items.length >= this._limit) _items.removeLast();
-    _items.insert(0, (InputHistoryItem(text)));
+    if (withoutLockItems.length >= this._limit)
+      this._items.removeAt(withoutLockItems.length - 1);
+    this._items.insert(0, (InputHistoryItem(text)));
   }
+
+  List<InputHistoryItem> get withoutLockItems =>
+      this._items.where((value) => value.isLock == false).toList();
 
   void add(InputHistoryItem item) {
     this._items.add(item);

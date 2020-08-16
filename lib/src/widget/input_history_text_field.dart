@@ -79,6 +79,9 @@ class InputHistoryTextField extends StatefulWidget {
   // enabled/disabled of input history
   final bool enableHistory;
 
+  // enabled/disabled saved history
+  final bool enableSave;
+
   /// make the input history list gradually transparent
   final bool enableOpacityGradient;
 
@@ -119,13 +122,25 @@ class InputHistoryTextField extends StatefulWidget {
   final Color textColor;
 
   /// Badge background color
+  @Deprecated('use `backgroundColor` instead ')
   final Color badgeColor;
+
+  /// background color
+  final Color backgroundColor;
 
   /// history icon color
   final Color historyIconColor;
 
   /// delete icon color
   final Color deleteIconColor;
+
+  final List<String> lockItems;
+
+  /// lock item background color
+  final Color lockBackgroundColor;
+
+  /// lock item font color
+  final Color lockTextColor;
 
   InputHistoryTextField(
       {Key key,
@@ -138,10 +153,12 @@ class InputHistoryTextField extends StatefulWidget {
       this.showDeleteIcon = true,
       this.enableOpacityGradient = false,
       this.enableHistory = true,
+      this.enableSave = true,
       this.historyIcon = Icons.history,
       this.deleteIcon = Icons.close,
       this.listStyle = ListStyle.List,
-      this.badgeColor,
+      @Deprecated('use `backgroundColor` instead ') this.badgeColor,
+      this.backgroundColor,
       this.textColor,
       this.historyIconColor,
       this.deleteIconColor,
@@ -149,6 +166,9 @@ class InputHistoryTextField extends StatefulWidget {
       this.listRowDecoration,
       this.textEditingController,
       this.listOffset,
+      this.lockItems,
+      this.lockTextColor,
+      this.lockBackgroundColor,
       this.historyIconTheme,
       this.deleteIconTheme,
       this.listTextStyle,
