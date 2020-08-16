@@ -2,21 +2,19 @@
 A input_history_text_field widget is automatically saved and suggest as you type.
 
 # Overview
+## List
+| example1                                                                                                     | example2                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| ![image](https://user-images.githubusercontent.com/885696/90326664-09d9aa80-dfc6-11ea-96d7-3824d5aaa7a6.png) | ![image](https://user-images.githubusercontent.com/885696/90326681-3a214900-dfc6-11ea-8355-8cc82f0399ba.png) |
 
-| List                                                                                                         |
-| ------------------------------------------------------------------------------------------------------------ |
-| ![image](https://user-images.githubusercontent.com/885696/89993604-eced6080-dcc1-11ea-8dbb-e2e12029d3de.png) |
-
-| Badge                                                                                                        |
-| ------------------------------------------------------------------------------------------------------------ |
-| ![image](https://user-images.githubusercontent.com/885696/90236027-29a18f00-de5d-11ea-9108-2a4f4439c979.png) |
-
-| Default items(cannot be delete)                                                                              |
-| ------------------------------------------------------------------------------------------------------------ |
-| ![image](https://user-images.githubusercontent.com/885696/90325805-4d7ae700-dfbb-11ea-99ef-06c419875a5e.png) |
+## Badge
+| example1                                                                                                     | example2                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| ![image](https://user-images.githubusercontent.com/885696/90236027-29a18f00-de5d-11ea-9108-2a4f4439c979.png) | ![image](https://user-images.githubusercontent.com/885696/90326706-7ce32100-dfc6-11ea-8128-62a8cf97571d.png) |
 
 
-| Customize                                                                                                    |
+## Customize 
+| &nbsp;                                                                                                       |
 | ------------------------------------------------------------------------------------------------------------ |
 | ![image](https://user-images.githubusercontent.com/885696/89993579-e19a3500-dcc1-11ea-895f-e8eae5288017.png) |
 

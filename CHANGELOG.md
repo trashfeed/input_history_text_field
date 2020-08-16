@@ -1,4 +1,7 @@
-## [0.0.7] 2020-08-16.
+## [0.0.9] 2020-08-16.
+- fix height when empty icon.
+
+## [0.0.8] 2020-08-16.
 - deprecated `badgeColor`. use `backgroundColor` instead.
 - add `enableSave`
   - `false` is not saved;
