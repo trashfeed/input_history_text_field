@@ -44,14 +44,14 @@ class MyApp extends StatelessWidget {
               /// - lock item
               InputHistoryTextField(
                 historyKey: "04",
-                listStyle: ListStyle.List,
-                lockBackgroundColor: Colors.grey.withAlpha(50),
+                listStyle: ListStyle.Badge,
+                lockBackgroundColor: Colors.brown.withAlpha(90),
                 lockTextColor: Colors.black,
                 lockItems: ['Flutter', 'Rails', 'React', 'Vue'],
                 showHistoryIcon: false,
                 deleteIconColor: Colors.white,
                 textColor: Colors.white,
-                backgroundColor: Colors.lightBlue,
+                backgroundColor: Colors.pinkAccent,
               ),
 
               /// sampe4
