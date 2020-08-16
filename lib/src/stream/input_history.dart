@@ -10,6 +10,7 @@ class InputHistoryController {
   String _historyKey;
   int _limit;
   TextEditingController _textEditingController;
+  List<String> _lockItems;
 
   bool _isShow = false;
   InputHistoryItems _histories;
@@ -22,9 +23,11 @@ class InputHistoryController {
 
   InputHistoryController();
 
-  void setup(String historyKey, int limit, _textEditingController) {
+  void setup(String historyKey, int limit, _textEditingController,
+      {List<String> lockItems}) {
     this._historyKey = historyKey;
     this._limit = limit;
+    this._lockItems = lockItems;
     this._textEditingController = _textEditingController;
     this._init();
   }
@@ -91,14 +94,22 @@ class InputHistoryController {
 
   Future<void> _savePreference() async {
     final prefs = await SharedPreferences.getInstance();
-    var json = jsonEncode(_histories.all.map((e) => e.toJson()).toList());
+    var json =
+        jsonEncode(_histories.withoutLockItems.map((e) => e.toJson()).toList());
     prefs.setString(this._historyKey, json);
   }
 
   Future<void> _load() async {
     final items = await this._loadPreference();
-    if (items == null || items.isEmpty) return null;
     this._parseToHistories(items);
+    this._parseLockItems();
+  }
+
+  void _parseLockItems() {
+    if (this._lockItems == null || this._lockItems.isEmpty) return;
+    this._lockItems.forEach((item) {
+      this._histories.add(InputHistoryItem.lock(item));
+    });
   }
 
   Future<String> _loadPreference() async {
@@ -108,6 +119,7 @@ class InputHistoryController {
   }
 
   void _parseToHistories(String jsons) {
+    if (jsons == null || jsons.isEmpty) return;
     try {
       final parsedJsons = jsonDecode(jsons);
       parsedJsons.forEach((json) {

@@ -29,7 +29,8 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     _inputHistoryController =
         widget.inputHistoryController ?? InputHistoryController();
     _inputHistoryController.setup(
-        widget.historyKey, widget.limit, widget.textEditingController);
+        widget.historyKey, widget.limit, widget.textEditingController,
+        lockItems: widget.lockItems);
   }
 
   void _onTextChange() {
@@ -279,6 +280,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   Widget _deleteIcon(InputHistoryItem item) {
+    if (item.isLock) return SizedBox.shrink();
     return SizedBox(
       width: 22,
       height: 22,

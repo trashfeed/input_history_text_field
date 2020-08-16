@@ -134,6 +134,8 @@ class InputHistoryTextField extends StatefulWidget {
   /// delete icon color
   final Color deleteIconColor;
 
+  final List<String> lockItems;
+
   InputHistoryTextField(
       {Key key,
       @required this.historyKey,
@@ -158,6 +160,7 @@ class InputHistoryTextField extends StatefulWidget {
       this.listRowDecoration,
       this.textEditingController,
       this.listOffset,
+      this.lockItems,
       this.historyIconTheme,
       this.deleteIconTheme,
       this.listTextStyle,

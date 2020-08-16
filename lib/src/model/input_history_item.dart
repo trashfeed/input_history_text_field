@@ -2,6 +2,7 @@ class InputHistoryItem {
   String text;
   int createdTime;
   int pinnedTime;
+  bool isLock = false;
 
   String get textToSingleLine => text.replaceAll("\n", "").replaceAll(" ", "");
   String get createdTimeLabel {
@@ -25,5 +26,12 @@ class InputHistoryItem {
 
   Map<String, dynamic> toJson() {
     return {'text': text, 'createdTime': createdTime, 'pinnedTime': pinnedTime};
+  }
+
+  InputHistoryItem.lock(String text) {
+    this.text = text;
+    this.createdTime = DateTime.now().millisecondsSinceEpoch;
+    this.pinnedTime = 0;
+    this.isLock = true;
   }
 }
