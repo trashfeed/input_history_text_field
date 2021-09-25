@@ -7,24 +7,22 @@ import 'package:input_history_text_field/src/model/input_history_items.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InputHistoryController {
-  String _historyKey;
-  int _limit;
-  TextEditingController _textEditingController;
-  List<String> _lockItems;
+  late String _historyKey;
+  late int _limit;
+  late TextEditingController _textEditingController;
+  late List<String>? _lockItems;
 
   bool _isShow = false;
-  InputHistoryItems _histories;
+  late InputHistoryItems _histories;
   InputHistoryItems get getHistory => this._histories;
 
-  var listOpen = StreamController<bool>();
-  var listShow = StreamController<bool>();
-  var listEmpty = StreamController<bool>();
-  var list = StreamController<InputHistoryItems>();
-
-  InputHistoryController();
+  final listOpen = StreamController<bool>();
+  final listShow = StreamController<bool>();
+  final listEmpty = StreamController<bool>();
+  final list = StreamController<InputHistoryItems>();
 
   void setup(String historyKey, int limit, _textEditingController,
-      {List<String> lockItems}) {
+      {List<String>? lockItems}) {
     this._historyKey = historyKey;
     this._limit = limit;
     this._lockItems = lockItems;
@@ -106,20 +104,25 @@ class InputHistoryController {
   }
 
   void _parseLockItems() {
-    if (this._lockItems == null || this._lockItems.isEmpty) return;
-    this._lockItems.forEach((item) {
+    if (this._lockItems == null || this._lockItems!.isEmpty) return;
+    this._lockItems!.forEach((item) {
       this._histories.add(InputHistoryItem.lock(item));
     });
   }
 
-  Future<String> _loadPreference() async {
+  Future<String?> _loadPreference() async {
     final prefs = await SharedPreferences.getInstance();
     final items = prefs.getString(this._historyKey);
     return items;
   }
 
-  void _parseToHistories(String jsons) {
-    if (jsons == null || jsons.isEmpty) return;
+  void _parseToHistories(String? jsons) {
+    if (jsons == null) {
+      return;
+    }
+    if (jsons.isEmpty) {
+      return;
+    }
     try {
       final parsedJsons = jsonDecode(jsons);
       parsedJsons.forEach((json) {

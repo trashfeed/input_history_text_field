@@ -1,3 +1,6 @@
+## [0.1.0] 2020-09-25.
+- Support Null Safety
+
 ## [0.0.9] 2020-08-16.
 - fix height when empty icon.
 
