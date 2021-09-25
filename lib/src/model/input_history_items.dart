@@ -2,9 +2,9 @@ import 'package:input_history_text_field/src/model/input_history_item.dart';
 
 class InputHistoryItems {
   final int _limit;
-  List<InputHistoryItem> _items = List<InputHistoryItem>();
+  List<InputHistoryItem> _items = [];
   List<InputHistoryItem> get all => this._items;
-  bool get isEmpty => this._items == null || this._items.isEmpty;
+  bool get isEmpty => this._items.isEmpty;
   InputHistoryItems(this._limit);
   InputHistoryItems.filterd(this._limit, this._items);
 

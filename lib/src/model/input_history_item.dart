@@ -1,7 +1,7 @@
 class InputHistoryItem {
-  String text;
-  int createdTime;
-  int pinnedTime;
+  late String text;
+  late int createdTime;
+  late int pinnedTime;
   bool isLock = false;
 
   String get textToSingleLine => text.replaceAll("\n", "").replaceAll(" ", "");

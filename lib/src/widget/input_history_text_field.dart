@@ -20,21 +20,21 @@ enum ListStyle {
 // ignore: must_be_immutable
 class InputHistoryTextField extends StatefulWidget {
   final String historyKey;
-  TextEditingController textEditingController;
-  FocusNode focusNode;
-  final ValueChanged<String> onSubmitted;
+  TextEditingController? textEditingController;
+  FocusNode? focusNode;
+  final ValueChanged<String>? onSubmitted;
   final InputDecoration decoration;
   final TextInputType keyboardType;
-  final TextInputAction textInputAction;
+  final TextInputAction? textInputAction;
   final TextCapitalization textCapitalization;
-  final TextStyle style;
-  final StrutStyle strutStyle;
+  final TextStyle? style;
+  final StrutStyle? strutStyle;
   final TextAlign textAlign;
-  final TextAlignVertical textAlignVertical;
-  final TextDirection textDirection;
+  final TextAlignVertical? textAlignVertical;
+  final TextDirection? textDirection;
   final bool readOnly;
   final ToolbarOptions toolbarOptions;
-  final bool showCursor;
+  final bool? showCursor;
   final bool autofocus;
   final bool obscureText;
   final bool autocorrect;
@@ -42,27 +42,27 @@ class InputHistoryTextField extends StatefulWidget {
   final SmartQuotesType smartQuotesType;
   final bool enableSuggestions;
   final int maxLines;
-  final int minLines;
+  final int? minLines;
   final bool expands;
-  final int maxLength;
+  final int? maxLength;
   final bool maxLengthEnforced;
-  final ValueChanged<String> onChanged;
-  final VoidCallback onEditingComplete;
-  final List<TextInputFormatter> inputFormatters;
-  final bool enabled;
+  final ValueChanged<String>? onChanged;
+  final VoidCallback? onEditingComplete;
+  final List<TextInputFormatter>? inputFormatters;
+  final bool? enabled;
   final double cursorWidth;
-  final Radius cursorRadius;
-  final Color cursorColor;
+  final Radius? cursorRadius;
+  final Color? cursorColor;
   final ui.BoxHeightStyle selectionHeightStyle;
   final ui.BoxWidthStyle selectionWidthStyle;
-  final Brightness keyboardAppearance;
+  final Brightness? keyboardAppearance;
   final EdgeInsets scrollPadding;
   final DragStartBehavior dragStartBehavior;
   final bool enableInteractiveSelection;
-  final GestureTapCallback onTap;
-  final InputCounterWidgetBuilder buildCounter;
-  final ScrollController scrollController;
-  final ScrollPhysics scrollPhysics;
+  final GestureTapCallback? onTap;
+  final InputCounterWidgetBuilder? buildCounter;
+  final ScrollController? scrollController;
+  final ScrollPhysics? scrollPhysics;
 
   /// max limit of input history
   final int limit;
@@ -86,65 +86,65 @@ class InputHistoryTextField extends StatefulWidget {
   final bool enableOpacityGradient;
 
   /// IconData of history icon.
-  final IconData deleteIcon;
+  final IconData? deleteIcon;
 
   /// IconData of delete icon.
-  final IconData historyIcon;
+  final IconData? historyIcon;
 
   /// docoration of input history row
-  final Decoration listRowDecoration;
+  final Decoration? listRowDecoration;
 
   /// docoration of input history area
-  final Decoration listDecoration;
+  final Decoration? listDecoration;
 
   /// offset of history list
-  final Offset listOffset;
+  final Offset? listOffset;
 
   /// customize history icon
-  final IconTheme historyIconTheme;
+  final IconTheme? historyIconTheme;
 
   /// customize delete icon
-  final IconTheme deleteIconTheme;
+  final IconTheme? deleteIconTheme;
 
   /// customize list text style
-  final TextStyle listTextStyle;
+  final TextStyle? listTextStyle;
 
   /// customize list all
-  final HistoryListItemLayoutBuilder historyListItemLayoutBuilder;
+  final HistoryListItemLayoutBuilder? historyListItemLayoutBuilder;
 
   /// controller
-  final InputHistoryController inputHistoryController;
+  final InputHistoryController? inputHistoryController;
 
   /// style List or Badge
-  final ListStyle listStyle;
+  final ListStyle? listStyle;
 
   /// font color
-  final Color textColor;
+  final Color? textColor;
 
   /// Badge background color
   @Deprecated('use `backgroundColor` instead ')
-  final Color badgeColor;
+  final Color? badgeColor;
 
   /// background color
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// history icon color
-  final Color historyIconColor;
+  final Color? historyIconColor;
 
   /// delete icon color
-  final Color deleteIconColor;
+  final Color? deleteIconColor;
 
-  final List<String> lockItems;
+  final List<String>? lockItems;
 
   /// lock item background color
-  final Color lockBackgroundColor;
+  final Color? lockBackgroundColor;
 
   /// lock item font color
-  final Color lockTextColor;
+  final Color? lockTextColor;
 
   InputHistoryTextField(
-      {Key key,
-      @required this.historyKey,
+      {Key? key,
+      required this.historyKey,
       this.historyListItemLayoutBuilder,
       this.inputHistoryController,
       this.limit = 5,
@@ -174,7 +174,7 @@ class InputHistoryTextField extends StatefulWidget {
       this.listTextStyle,
       this.focusNode,
       this.decoration = const InputDecoration(),
-      TextInputType keyboardType,
+      TextInputType? keyboardType,
       this.textInputAction,
       this.textCapitalization = TextCapitalization.none,
       this.style,
@@ -183,13 +183,13 @@ class InputHistoryTextField extends StatefulWidget {
       this.textAlignVertical,
       this.textDirection,
       this.readOnly = false,
-      ToolbarOptions toolbarOptions,
+      ToolbarOptions? toolbarOptions,
       this.showCursor,
       this.autofocus = false,
       this.obscureText = false,
       this.autocorrect = true,
-      SmartDashesType smartDashesType,
-      SmartQuotesType smartQuotesType,
+      SmartDashesType? smartDashesType,
+      SmartQuotesType? smartQuotesType,
       this.enableSuggestions = true,
       this.maxLines = 1,
       this.minLines,
@@ -214,31 +214,18 @@ class InputHistoryTextField extends StatefulWidget {
       this.buildCounter,
       this.scrollController,
       this.scrollPhysics})
-      : assert(textAlign != null),
-        assert(readOnly != null),
-        assert(autofocus != null),
-        assert(obscureText != null),
-        assert(autocorrect != null),
+      : 
         smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
         smartQuotesType = smartQuotesType ??
             (obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled),
-        assert(enableSuggestions != null),
-        assert(enableInteractiveSelection != null),
-        assert(maxLengthEnforced != null),
-        assert(scrollPadding != null),
-        assert(dragStartBehavior != null),
-        assert(selectionHeightStyle != null),
-        assert(selectionWidthStyle != null),
-        assert(maxLines == null || maxLines > 0),
-        assert(minLines == null || minLines > 0),
+        assert(maxLines > 0),
         assert(
-          (maxLines == null) || (minLines == null) || (maxLines >= minLines),
+          (minLines == null) || (maxLines >= minLines),
           "minLines can't be greater than maxLines",
         ),
-        assert(expands != null),
         assert(
-          !expands || (maxLines == null && minLines == null),
+          !expands || (minLines == null),
           'minLines and maxLines must be null when expands is true.',
         ),
         assert(!obscureText || maxLines == 1,
