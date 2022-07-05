@@ -63,6 +63,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   Future<void> _toggleOverlayHistoryList() async {
+    if (!widget.showHistoryList) return;
     this._initOverlay();
     if (!widget.focusNode!.hasFocus) {
       this._inputHistoryController.hide();
