@@ -155,7 +155,7 @@ class InputHistoryController {
     var filterdList = this
         ._histories
         .all
-        .where((value) => value.text.contains(text))
+        .where((value) => value.text.contains(text) && (value.text != text))
         .toList();
 
     InputHistoryItems filterdHistoryItems =
