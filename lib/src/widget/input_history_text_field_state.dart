@@ -21,7 +21,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     if (!widget.enableHistory) return;
     widget.focusNode ??= FocusNode();
     widget.textEditingController ??= TextEditingController();
-    widget.textEditingController?.addListener(_onTextChange);
+    if (widget.enableFilterHistory) widget.textEditingController?.addListener(_onTextChange);
     widget.focusNode?.addListener(_onFocusChange);
   }
 
