@@ -350,7 +350,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         expands: widget.expands,
         maxLength: widget.maxLength,
         // ignore: deprecated_member_use
-        maxLengthEnforced: widget.maxLengthEnforced,
+        maxLengthEnforcement: widget.maxLengthEnforcement,
         onChanged: widget.onChanged,
         onEditingComplete: widget.onEditingComplete,
         onSubmitted: widget.onSubmitted,
