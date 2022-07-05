@@ -30,7 +30,7 @@ class InputHistoryController {
   }
 
     void toggleExpand() async {
-    await this._init();
+    if (!_isShow) await this._init();
     if (this._histories.isEmpty) {
       this._forceHide();
       return;
