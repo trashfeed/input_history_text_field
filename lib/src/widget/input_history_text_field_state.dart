@@ -54,6 +54,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   void dispose() {
     super.dispose();
     this._inputHistoryController.dispose();
+    this._overlayHistoryList?.remove();
   }
 
   @override
