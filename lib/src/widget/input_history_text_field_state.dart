@@ -1,10 +1,7 @@
-import 'dart:ui';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:input_history_text_field/input_history_text_field.dart';
 import 'package:input_history_text_field/src/model/input_history_item.dart';
 import 'package:input_history_text_field/src/model/input_history_items.dart';
-import 'package:input_history_text_field/src/stream/input_history.dart';
 
 class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   late InputHistoryController _inputHistoryController;

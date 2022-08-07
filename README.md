@@ -247,6 +247,8 @@ InputHistoryTextField(
 | enableHistory                       | `true`                                 | bool                   | enabled/disabled of input history                       |
 | enableSave                          | `true`                                 | bool                   | enabled/disabled saved history                          |
 | enableOpacityGradient               | `true`                                 | bool                   | make the input history list gradually transparent       |
+| enableFilterHistory                 | `true`                                 | bool                   | suggest filters when input text                         |
+| showHistoryList                     | `true`                                 | bool                   | show/hide of input history list                         |
 | historyIcon                         | `Icons.add`                            | IconData               | `IconData` for history icon.                            |
 | historyIconTheme                    | `IconTheme`                            | IconTheme              | `IconTheme` for history icon.                           |
 | deleteIcon                          | `Icons.delete`                         | IconData               | `IconData` for delete icon.                             |
