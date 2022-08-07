@@ -45,7 +45,7 @@ class InputHistoryTextField extends StatefulWidget {
   final int? minLines;
   final bool expands;
   final int? maxLength;
-  final bool maxLengthEnforced;
+  final MaxLengthEnforcement? maxLengthEnforcement;
   final ValueChanged<String>? onChanged;
   final VoidCallback? onEditingComplete;
   final List<TextInputFormatter>? inputFormatters;
@@ -78,6 +78,12 @@ class InputHistoryTextField extends StatefulWidget {
 
   // enabled/disabled of input history
   final bool enableHistory;
+
+  /// show history list
+  final bool showHistoryList;
+
+  // enabled/disabled of filter history
+  final bool enableFilterHistory;
 
   // enabled/disabled saved history
   final bool enableSave;
@@ -153,6 +159,8 @@ class InputHistoryTextField extends StatefulWidget {
       this.showDeleteIcon = true,
       this.enableOpacityGradient = false,
       this.enableHistory = true,
+      this.showHistoryList = true,
+      this.enableFilterHistory = true,
       this.enableSave = true,
       this.historyIcon = Icons.history,
       this.deleteIcon = Icons.close,
@@ -195,7 +203,7 @@ class InputHistoryTextField extends StatefulWidget {
       this.minLines,
       this.expands = false,
       this.maxLength,
-      this.maxLengthEnforced = true,
+      this.maxLengthEnforcement = MaxLengthEnforcement.none,
       this.onChanged,
       this.onEditingComplete,
       this.onSubmitted,

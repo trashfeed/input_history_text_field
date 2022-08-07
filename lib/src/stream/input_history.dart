@@ -21,8 +21,7 @@ class InputHistoryController {
   final listEmpty = StreamController<bool>();
   final list = StreamController<InputHistoryItems>();
 
-  void setup(String historyKey, int limit, _textEditingController,
-      {List<String>? lockItems}) {
+  void setup(String historyKey, int limit, _textEditingController, {List<String>? lockItems}) {
     this._historyKey = historyKey;
     this._limit = limit;
     this._lockItems = lockItems;
@@ -30,7 +29,8 @@ class InputHistoryController {
     this._init();
   }
 
-  void toggleExpand() {
+    void toggleExpand() async {
+    if (!_isShow) await this._init();
     if (this._histories.isEmpty) {
       this._forceHide();
       return;
@@ -92,8 +92,7 @@ class InputHistoryController {
 
   Future<void> _savePreference() async {
     final prefs = await SharedPreferences.getInstance();
-    var json =
-        jsonEncode(_histories.withoutLockItems.map((e) => e.toJson()).toList());
+    var json = jsonEncode(_histories.withoutLockItems.map((e) => e.toJson()).toList());
     prefs.setString(this._historyKey, json);
   }
 
@@ -126,8 +125,7 @@ class InputHistoryController {
     try {
       final parsedJsons = jsonDecode(jsons);
       parsedJsons.forEach((json) {
-        if (json is Map<String, dynamic>)
-          this._histories.add(InputHistoryItem.fromJson(json));
+        if (json is Map<String, dynamic>) this._histories.add(InputHistoryItem.fromJson(json));
       });
     } catch (e, stackTrace) {
       print(e);
@@ -152,14 +150,9 @@ class InputHistoryController {
       return;
     }
 
-    var filterdList = this
-        ._histories
-        .all
-        .where((value) => value.text.contains(text))
-        .toList();
+    var filterdList = this._histories.all.where((value) => value.text.contains(text) && (value.text != text)).toList();
 
-    InputHistoryItems filterdHistoryItems =
-        InputHistoryItems.filterd(this._limit, filterdList);
+    InputHistoryItems filterdHistoryItems = InputHistoryItems.filterd(this._limit, filterdList);
     this.list.sink.add(filterdHistoryItems);
     this.listEmpty.sink.add(filterdHistoryItems.isEmpty);
   }

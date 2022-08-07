@@ -9,6 +9,7 @@ import 'package:input_history_text_field/src/stream/input_history.dart';
 class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   late InputHistoryController _inputHistoryController;
   OverlayEntry? _overlayHistoryList;
+  String? _lastSubmitValue;
 
   @override
   void initState() {
@@ -20,8 +21,8 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   void _initWidgetState() {
     if (!widget.enableHistory) return;
     widget.focusNode ??= FocusNode();
-    widget.textEditingController ??= TextEditingController();
-    widget.textEditingController?.addListener(_onTextChange);
+    widget.textEditingController ??= TextEditingController(text: _lastSubmitValue);
+    if (widget.enableFilterHistory) widget.textEditingController?.addListener(_onTextChange);
     widget.focusNode?.addListener(_onFocusChange);
   }
 
@@ -41,7 +42,13 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
 
   void _onFocusChange() {
     if (this.widget.hasFocusExpand) this._toggleOverlayHistoryList();
-    if (!widget.focusNode!.hasFocus) _saveHistory();
+    //trigger filterHistory on focus
+    if (widget.focusNode!.hasFocus) this._inputHistoryController.filterHistory(widget.textEditingController!.text);
+    if (widget.textEditingController!.text != _lastSubmitValue && !widget.focusNode!.hasFocus) {
+      //trigger _saveHistory on submit
+      _saveHistory();
+      _lastSubmitValue = widget.textEditingController!.text;
+    }
   }
 
   void _saveHistory() {
@@ -54,6 +61,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   void dispose() {
     super.dispose();
     this._inputHistoryController.dispose();
+    this._overlayHistoryList?.remove();
   }
 
   @override
@@ -62,6 +70,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   Future<void> _toggleOverlayHistoryList() async {
+    if (!widget.showHistoryList) return;
     this._initOverlay();
     if (!widget.focusNode!.hasFocus) {
       this._inputHistoryController.hide();
@@ -350,7 +359,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         expands: widget.expands,
         maxLength: widget.maxLength,
         // ignore: deprecated_member_use
-        maxLengthEnforced: widget.maxLengthEnforced,
+        maxLengthEnforcement: widget.maxLengthEnforcement,
         onChanged: widget.onChanged,
         onEditingComplete: widget.onEditingComplete,
         onSubmitted: widget.onSubmitted,
