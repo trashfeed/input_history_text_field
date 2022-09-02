@@ -18,8 +18,10 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   void _initWidgetState() {
     if (!widget.enableHistory) return;
     widget.focusNode ??= FocusNode();
-    widget.textEditingController ??= TextEditingController(text: _lastSubmitValue);
-    if (widget.enableFilterHistory) widget.textEditingController?.addListener(_onTextChange);
+    widget.textEditingController ??=
+        TextEditingController(text: _lastSubmitValue);
+    if (widget.enableFilterHistory)
+      widget.textEditingController?.addListener(_onTextChange);
     widget.focusNode?.addListener(_onFocusChange);
   }
 
@@ -40,8 +42,12 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   void _onFocusChange() {
     if (this.widget.hasFocusExpand) this._toggleOverlayHistoryList();
     //trigger filterHistory on focus
-    if (widget.focusNode!.hasFocus) this._inputHistoryController.filterHistory(widget.textEditingController!.text);
-    if (widget.textEditingController!.text != _lastSubmitValue && !widget.focusNode!.hasFocus) {
+    if (widget.focusNode!.hasFocus)
+      this
+          ._inputHistoryController
+          .filterHistory(widget.textEditingController!.text);
+    if (widget.textEditingController!.text != _lastSubmitValue &&
+        !widget.focusNode!.hasFocus) {
       //trigger _saveHistory on submit
       _saveHistory();
       _lastSubmitValue = widget.textEditingController!.text;
@@ -174,33 +180,31 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   Widget _badgeHistoryItem(item) {
-    return Flexible(
-      child: Container(
-        height: 32,
-        margin: EdgeInsets.only(right: 5, bottom: 5),
-        padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
-        decoration: BoxDecoration(
-          color: this._backgroundColor(item) ??
-              // ignore: deprecated_member_use_from_same_package
-              widget.badgeColor ??
-              Theme.of(context).disabledColor.withAlpha(20),
-          borderRadius: BorderRadius.all(Radius.circular(90)),
-        ),
-        child: InkWell(
-          onTap: () => this._inputHistoryController.select(item.text),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              /// history icon
-              if (widget.showHistoryIcon) _historyIcon(),
+    return Container(
+      height: 32,
+      margin: EdgeInsets.only(right: 5, bottom: 5),
+      padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+      decoration: BoxDecoration(
+        color: this._backgroundColor(item) ??
+            // ignore: deprecated_member_use_from_same_package
+            widget.badgeColor ??
+            Theme.of(context).disabledColor.withAlpha(20),
+        borderRadius: BorderRadius.all(Radius.circular(90)),
+      ),
+      child: InkWell(
+        onTap: () => this._inputHistoryController.select(item.text),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            /// history icon
+            if (widget.showHistoryIcon) _historyIcon(),
 
-              /// text
-              _badgeHistoryItemText(item),
+            /// text
+            _historyItemText(item),
 
-              /// remove icon
-              if (widget.showDeleteIcon) _deleteIcon(item)
-            ],
-          ),
+            /// remove icon
+            if (widget.showDeleteIcon) _deleteIcon(item)
+          ],
         ),
       ),
     );
@@ -257,13 +261,6 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
       child: Container(
           margin: const EdgeInsets.only(left: 5.0),
           child: this._historyItemText(item)),
-    );
-  }
-
-  Widget _badgeHistoryItemText(InputHistoryItem item) {
-    return Flexible(
-      flex: 1,
-      child: Container(child: this._historyItemText(item)),
     );
   }
 
