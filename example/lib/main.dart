@@ -22,11 +22,13 @@ class MyApp extends StatelessWidget {
           padding: EdgeInsets.all(50),
           child: Column(
             children: <Widget>[
+              Text('Enter text and done'),
               /// sample1
               /// - list
               InputHistoryTextField(
                 historyKey: "01",
                 listStyle: ListStyle.List,
+                decoration: InputDecoration(hintText: 'List type'),
               ),
 
               /// sample2
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
                 backgroundColor: Colors.lightBlue,
                 textColor: Colors.white,
                 deleteIconColor: Colors.white,
+                decoration: InputDecoration(hintText: 'Badge type'),
               ),
 
               /// sample3
@@ -52,6 +55,7 @@ class MyApp extends StatelessWidget {
                 deleteIconColor: Colors.white,
                 textColor: Colors.white,
                 backgroundColor: Colors.pinkAccent,
+                decoration: InputDecoration(hintText: 'Fixed list'),
               ),
 
               /// sampe4
@@ -68,6 +72,7 @@ class MyApp extends StatelessWidget {
                 historyIcon: Icons.add,
                 deleteIcon: Icons.delete,
                 enableOpacityGradient: false,
+                decoration: InputDecoration(hintText: 'Customize list'),
                 listRowDecoration: BoxDecoration(
                   border: Border(
                     left: BorderSide(color: Colors.red, width: 3),
