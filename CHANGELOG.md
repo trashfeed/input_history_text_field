@@ -1,3 +1,6 @@
+## [0.3.0] 2024-07-12.
+- support Flutter `3.22`
+
 ## [0.1.1] 2022-08-07.
 - supported Flutter version to `2.10.5`
 - https://github.com/trashfeed/input_history_text_field/pull/9

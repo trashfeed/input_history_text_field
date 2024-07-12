@@ -32,7 +32,7 @@ class InputHistoryTextField extends StatefulWidget {
   final TextAlignVertical? textAlignVertical;
   final TextDirection? textDirection;
   final bool readOnly;
-  final ToolbarOptions toolbarOptions;
+  final EditableTextContextMenuBuilder? contextMenuBuilder;
   final bool? showCursor;
   final bool autofocus;
   final bool obscureText;
@@ -190,7 +190,7 @@ class InputHistoryTextField extends StatefulWidget {
       this.textAlignVertical,
       this.textDirection,
       this.readOnly = false,
-      ToolbarOptions? toolbarOptions,
+      this.contextMenuBuilder = _defaultContextMenuBuilder,
       this.showCursor,
       this.autofocus = false,
       this.obscureText = false,
@@ -221,8 +221,7 @@ class InputHistoryTextField extends StatefulWidget {
       this.buildCounter,
       this.scrollController,
       this.scrollPhysics})
-      : 
-        smartDashesType = smartDashesType ??
+      : smartDashesType = smartDashesType ??
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
         smartQuotesType = smartQuotesType ??
             (obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled),
@@ -242,20 +241,16 @@ class InputHistoryTextField extends StatefulWidget {
             maxLength > 0),
         keyboardType = keyboardType ??
             (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
-        toolbarOptions = toolbarOptions ??
-            (obscureText
-                ? const ToolbarOptions(
-                    selectAll: true,
-                    paste: true,
-                  )
-                : const ToolbarOptions(
-                    copy: true,
-                    cut: true,
-                    selectAll: true,
-                    paste: true,
-                  )),
         super(key: key);
 
   @override
   State<StatefulWidget> createState() => InputHistoryTextFieldState();
+
+  static Widget _defaultContextMenuBuilder(
+      BuildContext context, EditableTextState editableTextState) {
+    return AdaptiveTextSelectionToolbar.editableText(
+      editableTextState: editableTextState,
+    );
+  }
+
 }

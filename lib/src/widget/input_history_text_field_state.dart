@@ -87,7 +87,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
       return;
     }
     _overlayHistoryList = this._historyListContainer();
-    Overlay.of(context)!.insert(this._overlayHistoryList!);
+    Overlay.of(context).insert(this._overlayHistoryList!);
   }
 
   OverlayEntry _historyListContainer() {
@@ -270,7 +270,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         style: widget.listTextStyle ??
             TextStyle(
                 color: this._textColor(item) ??
-                    Theme.of(context).textTheme.bodyText1!.color));
+                    Theme.of(context).textTheme.bodyLarge!.color));
   }
 
   Color? _textColor(InputHistoryItem item) {
@@ -340,7 +340,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         textAlignVertical: widget.textAlignVertical,
         textDirection: widget.textDirection,
         readOnly: widget.readOnly,
-        toolbarOptions: widget.toolbarOptions,
+        contextMenuBuilder: widget.contextMenuBuilder,
         showCursor: widget.showCursor,
         autofocus: widget.autofocus,
         obscureText: widget.obscureText,
