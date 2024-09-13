@@ -44,6 +44,7 @@ class InputHistoryTextField extends StatefulWidget {
   final int? minLines;
   final bool expands;
   final int? maxLength;
+  final double? overlayHeight;
   final MaxLengthEnforcement? maxLengthEnforcement;
   final ValueChanged<String>? onChanged;
   final VoidCallback? onEditingComplete;
@@ -177,6 +178,7 @@ class InputHistoryTextField extends StatefulWidget {
       this.listOffset,
       this.lockItems,
       this.lockTextColor,
+      this.overlayHeight,
       this.lockBackgroundColor,
       this.historyIconTheme,
       this.deleteIconTheme,
