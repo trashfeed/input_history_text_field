@@ -40,10 +40,11 @@ class InputHistoryTextField extends StatefulWidget {
   final SmartDashesType smartDashesType;
   final SmartQuotesType smartQuotesType;
   final bool enableSuggestions;
-  final int maxLines;
+  final int? maxLines;
   final int? minLines;
   final bool expands;
   final int? maxLength;
+  final double? overlayHeight;
   final MaxLengthEnforcement? maxLengthEnforcement;
   final ValueChanged<String>? onChanged;
   final VoidCallback? onEditingComplete;
@@ -62,6 +63,7 @@ class InputHistoryTextField extends StatefulWidget {
   final InputCounterWidgetBuilder? buildCounter;
   final ScrollController? scrollController;
   final ScrollPhysics? scrollPhysics;
+  final String Function(String)? textToSingleLine;
 
   /// max limit of input history
   final int limit;
@@ -151,6 +153,7 @@ class InputHistoryTextField extends StatefulWidget {
       {Key? key,
       required this.historyKey,
       this.historyListItemLayoutBuilder,
+      this.textToSingleLine,
       this.inputHistoryController,
       this.limit = 5,
       this.hasFocusExpand = true,
@@ -175,6 +178,7 @@ class InputHistoryTextField extends StatefulWidget {
       this.listOffset,
       this.lockItems,
       this.lockTextColor,
+      this.overlayHeight,
       this.lockBackgroundColor,
       this.historyIconTheme,
       this.deleteIconTheme,
@@ -198,7 +202,7 @@ class InputHistoryTextField extends StatefulWidget {
       SmartDashesType? smartDashesType,
       SmartQuotesType? smartQuotesType,
       this.enableSuggestions = true,
-      this.maxLines = 1,
+      this.maxLines,
       this.minLines,
       this.expands = false,
       this.maxLength,
@@ -225,9 +229,8 @@ class InputHistoryTextField extends StatefulWidget {
             (obscureText ? SmartDashesType.disabled : SmartDashesType.enabled),
         smartQuotesType = smartQuotesType ??
             (obscureText ? SmartQuotesType.disabled : SmartQuotesType.enabled),
-        assert(maxLines > 0),
         assert(
-          (minLines == null) || (maxLines >= minLines),
+          (minLines == null) || (maxLines != null && (maxLines >= minLines)),
           "minLines can't be greater than maxLines",
         ),
         assert(
