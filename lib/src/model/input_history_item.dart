@@ -4,7 +4,6 @@ class InputHistoryItem {
   late int pinnedTime;
   bool isLock = false;
 
-  String get textToSingleLine => text.replaceAll("\n", "").replaceAll(" ", "");
   String get createdTimeLabel {
     var dt = DateTime.fromMillisecondsSinceEpoch(this.createdTime)
         .toLocal()

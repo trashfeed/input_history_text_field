@@ -5,24 +5,27 @@ import 'package:input_history_text_field/src/model/input_history_items.dart';
 
 class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   late InputHistoryController _inputHistoryController;
+  late String Function(String) _textToSingleLine;
+  late FocusNode _focusNode;
   OverlayEntry? _overlayHistoryList;
   String? _lastSubmitValue;
 
   @override
   void initState() {
     super.initState();
-    this._initWidgetState();
-    this._initController();
+    _initWidgetState();
+    _initController();
   }
 
   void _initWidgetState() {
     if (!widget.enableHistory) return;
-    widget.focusNode ??= FocusNode();
+    _focusNode = widget.focusNode ??= FocusNode();
+    _textToSingleLine = widget.textToSingleLine ?? _defaultTextToSingleLine;
     widget.textEditingController ??=
         TextEditingController(text: _lastSubmitValue);
     if (widget.enableFilterHistory)
       widget.textEditingController?.addListener(_onTextChange);
-    widget.focusNode?.addListener(_onFocusChange);
+    _focusNode.addListener(_onFocusChange);
   }
 
   void _initController() {
@@ -34,21 +37,19 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   void _onTextChange() {
-    this
-        ._inputHistoryController
-        .filterHistory(widget.textEditingController!.text);
+    _inputHistoryController.filterHistory(widget.textEditingController!.text);
   }
 
   void _onFocusChange() {
-    if (this.widget.hasFocusExpand) this._toggleOverlayHistoryList();
-    //trigger filterHistory on focus
-    if (widget.focusNode!.hasFocus)
-      this
-          ._inputHistoryController
-          .filterHistory(widget.textEditingController!.text);
+    if (_overlayHistoryList == null) {
+      _initOverlay(); // Initialize the overlay right away
+    }
+    print(_focusNode.hasFocus);
+    if (_focusNode.hasFocus && _overlayHistoryList == null) {
+      _toggleOverlayHistoryList();
+    }
     if (widget.textEditingController!.text != _lastSubmitValue &&
-        !widget.focusNode!.hasFocus) {
-      //trigger _saveHistory on submit
+        !_focusNode.hasFocus) {
       _saveHistory();
       _lastSubmitValue = widget.textEditingController!.text;
     }
@@ -63,8 +64,9 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   @override
   void dispose() {
     super.dispose();
-    this._inputHistoryController.dispose();
-    this._overlayHistoryList?.remove();
+    _inputHistoryController.dispose();
+    _focusNode.dispose();
+    _overlayHistoryList?.remove();
   }
 
   @override
@@ -74,20 +76,17 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
 
   Future<void> _toggleOverlayHistoryList() async {
     if (!widget.showHistoryList) return;
-    this._initOverlay();
-    if (!widget.focusNode!.hasFocus) {
-      this._inputHistoryController.hide();
-      return;
+
+    if (_focusNode.hasFocus) {
+      _inputHistoryController.toggleExpand();
+    } else {
+      _inputHistoryController.hide();
     }
-    this._inputHistoryController.toggleExpand();
   }
 
   void _initOverlay() {
-    if (_overlayHistoryList != null) {
-      return;
-    }
-    _overlayHistoryList = this._historyListContainer();
-    Overlay.of(context).insert(this._overlayHistoryList!);
+    _overlayHistoryList = _historyListContainer();
+    Overlay.of(context).insert(_overlayHistoryList!);
   }
 
   OverlayEntry _historyListContainer() {
@@ -95,9 +94,11 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     return OverlayEntry(
       builder: (context) {
         return StreamBuilder<bool>(
-          stream: this._inputHistoryController.listShow.stream,
+          stream: _inputHistoryController.listShow.stream,
           builder: (context, shown) {
-            if (!shown.hasData) return SizedBox.shrink();
+            if (!shown.hasData ||
+                shown.connectionState == ConnectionState.waiting)
+              return SizedBox.shrink();
             return Stack(
               children: <Widget>[
                 shown.data! ? _backdrop(context) : SizedBox.shrink(),
@@ -143,7 +144,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
                 ? null
                 : widget.listDecoration ?? _listDecoration(),
             child: StreamBuilder<InputHistoryItems>(
-              stream: this._inputHistoryController.list.stream,
+              stream: _inputHistoryController.list.stream,
               builder: (context, snapshot) {
                 if (!snapshot.hasData || snapshot.hasError || !isShow)
                   return SizedBox.shrink();
@@ -165,7 +166,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
                             ? 1 - index / snapshot.data!.all.length
                             : 1,
                         child: widget.historyListItemLayoutBuilder?.call(
-                                this._inputHistoryController,
+                                _inputHistoryController,
                                 snapshot.data!.all[index],
                                 index) ??
                             _listHistoryItem(snapshot.data!.all[index]),
@@ -185,14 +186,14 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
       margin: EdgeInsets.only(right: 5, bottom: 5),
       padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
       decoration: BoxDecoration(
-        color: this._backgroundColor(item) ??
+        color: _backgroundColor(item) ??
             // ignore: deprecated_member_use_from_same_package
             widget.badgeColor ??
             Theme.of(context).disabledColor.withAlpha(20),
         borderRadius: BorderRadius.all(Radius.circular(90)),
       ),
       child: InkWell(
-        onTap: () => this._inputHistoryController.select(item.text),
+        onTap: () => _inputHistoryController.select(item.text),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -214,9 +215,9 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     return Positioned.fill(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () {
-          this._toggleOverlayHistoryList();
-          widget.focusNode?.unfocus();
+        onTap: () async {
+          _focusNode.unfocus();
+          await _toggleOverlayHistoryList();
         },
         child: Container(
           color: Colors.transparent,
@@ -227,7 +228,10 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
 
   Widget _listHistoryItem(InputHistoryItem item) {
     return InkWell(
-      onTap: () => this._inputHistoryController.select(item.text),
+      onTap: () async {
+        _lastSubmitValue = item.text;
+        _inputHistoryController.select(item.text);
+      },
       child: Container(
         padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
         decoration: _listHistoryItemDecoration(item),
@@ -260,16 +264,16 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
       flex: 1,
       child: Container(
           margin: const EdgeInsets.only(left: 5.0),
-          child: this._historyItemText(item)),
+          child: _historyItemText(item)),
     );
   }
 
   Widget _historyItemText(InputHistoryItem item) {
-    return Text(item.textToSingleLine,
+    return Text(_textToSingleLine.call(item.text),
         overflow: TextOverflow.ellipsis,
         style: widget.listTextStyle ??
             TextStyle(
-                color: this._textColor(item) ??
+                color: _textColor(item) ??
                     Theme.of(context).textTheme.bodyLarge!.color));
   }
 
@@ -318,18 +322,23 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   void _onTap() {
-    widget.onTap?.call();
+    if (widget.textEditingController!.text != _lastSubmitValue &&
+        _lastSubmitValue != null) {
+      widget.onTap?.call();
+    }
     if (widget.textEditingController == null) return;
-    final endPosition = widget.textEditingController?.selection.end;
-    final textLength = widget.textEditingController?.text.length;
-    if (endPosition == textLength) this._toggleOverlayHistoryList();
+    _toggleOverlayHistoryList();
+  }
+
+  String _defaultTextToSingleLine(String text) {
+    return text.replaceAll("\n", "").replaceAll(" ", "");
   }
 
   Widget _textField() {
     return TextField(
         key: widget.key,
         controller: widget.textEditingController,
-        focusNode: widget.focusNode,
+        focusNode: _focusNode,
         decoration: widget.decoration,
         keyboardType: widget.keyboardType,
         textInputAction: widget.textInputAction,
