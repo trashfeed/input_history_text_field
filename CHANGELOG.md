@@ -1,3 +1,7 @@
+## [0.3.1] 2024-09-14.
+- fix bug
+  - https://github.com/trashfeed/input_history_text_field/pull/20
+
 ## [0.3.0] 2024-07-12.
 - support Flutter `3.22`
 
