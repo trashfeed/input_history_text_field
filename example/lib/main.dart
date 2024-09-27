@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
               InputHistoryTextField(
                 historyKey: "05",
                 listStyle: ListStyle.List,
+                onHistoryItemSelected: (value) => print(value),
                 updateSelectedHistoryItemDateTime: true,
                 decoration: InputDecoration(hintText: 'List type'),
               ),
