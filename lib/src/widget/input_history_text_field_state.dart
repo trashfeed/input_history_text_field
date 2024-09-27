@@ -213,6 +213,8 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         onTap: () async {
           _lastSubmitValue = item.text;
           await _inputHistoryController.select(item.text);
+          widget.onHistoryItemSelected?.call(item.text);
+          _focusNode.requestFocus();
         },
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -251,6 +253,8 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
       onTap: () async {
         _lastSubmitValue = item.text;
         await _inputHistoryController.select(item.text);
+        widget.onHistoryItemSelected?.call(item.text);
+        _focusNode.requestFocus();
       },
       child: Container(
         padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),

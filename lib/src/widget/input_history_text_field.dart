@@ -48,6 +48,7 @@ class InputHistoryTextField extends StatefulWidget {
   final MaxLengthEnforcement? maxLengthEnforcement;
   final ValueChanged<String>? onChanged;
   final VoidCallback? onEditingComplete;
+  final ValueChanged<String>? onHistoryItemSelected;
   final List<TextInputFormatter>? inputFormatters;
   final bool? enabled;
   final double cursorWidth;
@@ -157,6 +158,7 @@ class InputHistoryTextField extends StatefulWidget {
       this.historyListItemLayoutBuilder,
       this.textToSingleLine,
       this.inputHistoryController,
+      this.onHistoryItemSelected,
       this.limit = 5,
       this.hasFocusExpand = true,
       this.showHistoryIcon = true,
