@@ -149,6 +149,8 @@ class InputHistoryTextField extends StatefulWidget {
   /// lock item font color
   final Color? lockTextColor;
 
+  final bool updateSelectedHistoryItemDateTime;
+
   InputHistoryTextField(
       {Key? key,
       required this.historyKey,
@@ -163,6 +165,7 @@ class InputHistoryTextField extends StatefulWidget {
       this.enableHistory = true,
       this.showHistoryList = true,
       this.enableFilterHistory = true,
+      this.updateSelectedHistoryItemDateTime = false,
       this.enableSave = true,
       this.historyIcon = Icons.history,
       this.deleteIcon = Icons.close,
@@ -255,5 +258,4 @@ class InputHistoryTextField extends StatefulWidget {
       editableTextState: editableTextState,
     );
   }
-
 }

@@ -23,11 +23,21 @@ class MyApp extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Text('Enter text and done'),
+
               /// sample1
               /// - list
               InputHistoryTextField(
                 historyKey: "01",
                 listStyle: ListStyle.List,
+                decoration: InputDecoration(hintText: 'List type'),
+              ),
+
+              /// sample1
+              /// - list with updateHistoryItemDateTime
+              InputHistoryTextField(
+                historyKey: "05",
+                listStyle: ListStyle.List,
+                updateSelectedHistoryItemDateTime: true,
                 decoration: InputDecoration(hintText: 'List type'),
               ),
 
@@ -103,7 +113,7 @@ class MyApp extends StatelessWidget {
                 listTextStyle: TextStyle(fontSize: 30),
                 historyListItemLayoutBuilder: (controller, value, index) {
                   return InkWell(
-                    onTap: () => controller.select(value.text),
+                    onTap: () async => await controller.select(value.text),
                     child: Row(
                       children: [
                         Expanded(

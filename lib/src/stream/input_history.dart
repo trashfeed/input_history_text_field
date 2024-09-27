@@ -11,6 +11,7 @@ class InputHistoryController {
   late int _limit;
   late TextEditingController _textEditingController;
   late List<String>? _lockItems;
+  late bool _updateSelectedHistoryItemDateTime;
 
   bool _isShow = false;
   late InputHistoryItems _histories;
@@ -21,12 +22,18 @@ class InputHistoryController {
   final listEmpty = StreamController<bool>();
   final list = StreamController<InputHistoryItems>();
 
-  void setup(String historyKey, int limit, _textEditingController,
-      {List<String>? lockItems}) {
+  void setup(
+    String historyKey,
+    int limit,
+    _textEditingController,
+    bool updateSelectedHistoryItemDateTime, {
+    List<String>? lockItems,
+  }) {
     this._historyKey = historyKey;
     this._limit = limit;
     this._lockItems = lockItems;
     this._textEditingController = _textEditingController;
+    this._updateSelectedHistoryItemDateTime = updateSelectedHistoryItemDateTime;
     this._init();
   }
 
@@ -169,8 +176,12 @@ class InputHistoryController {
     this.listEmpty.sink.add(filterdHistoryItems.isEmpty);
   }
 
-  void select(String text) {
+  Future<void> select(String text) async {
     this._textEditingController.text = text;
+    if (_updateSelectedHistoryItemDateTime) {
+      _histories.updateByText(text);
+      await _save();
+    }
     this.hide();
   }
 }

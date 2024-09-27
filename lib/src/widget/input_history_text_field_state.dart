@@ -32,8 +32,12 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     _inputHistoryController =
         widget.inputHistoryController ?? InputHistoryController();
     _inputHistoryController.setup(
-        widget.historyKey, widget.limit, widget.textEditingController,
-        lockItems: widget.lockItems);
+      widget.historyKey,
+      widget.limit,
+      widget.textEditingController,
+      widget.updateSelectedHistoryItemDateTime,
+      lockItems: widget.lockItems,
+    );
   }
 
   void _onTextChange() {
@@ -206,7 +210,10 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         borderRadius: BorderRadius.all(Radius.circular(90)),
       ),
       child: InkWell(
-        onTap: () => _inputHistoryController.select(item.text),
+        onTap: () async {
+          _lastSubmitValue = item.text;
+          await _inputHistoryController.select(item.text);
+        },
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -243,7 +250,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     return InkWell(
       onTap: () async {
         _lastSubmitValue = item.text;
-        _inputHistoryController.select(item.text);
+        await _inputHistoryController.select(item.text);
       },
       child: Container(
         padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
