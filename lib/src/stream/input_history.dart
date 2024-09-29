@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:input_history_text_field/src/model/input_history_item.dart';
 import 'package:input_history_text_field/src/model/input_history_items.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rxdart/rxdart.dart';
 
 class InputHistoryController {
+  static InputHistoryController?
+      _activeController; // Global reference to the active controller
+
   late String _historyKey;
   late int _limit;
   late TextEditingController _textEditingController;
@@ -17,11 +21,10 @@ class InputHistoryController {
   late InputHistoryItems _histories;
   InputHistoryItems get getHistory => this._histories;
 
-  final listOpen = StreamController<bool>();
-  final listShow = StreamController<bool>();
-  final listEmpty = StreamController<bool>();
-  final list = StreamController<InputHistoryItems>();
-
+  final listOpen = BehaviorSubject<bool>.seeded(false);
+  final listShow = BehaviorSubject<bool>.seeded(false);
+  final listEmpty = BehaviorSubject<bool>.seeded(false);
+  final list = BehaviorSubject<InputHistoryItems>();
   void setup(
     String historyKey,
     int limit,
@@ -38,14 +41,20 @@ class InputHistoryController {
   }
 
   void toggleExpand() async {
+    // Hide any other active controller's popup before showing this one
+    if (_activeController != null && _activeController != this) {
+      _activeController!._forceHide();
+    }
+
     if (!_isShow) await this._init();
     if (this._histories.isEmpty) {
       this._forceHide();
       return;
     }
 
+    _activeController = this; // Set this controller as active
     this._clearFilter();
-    this.listOpen.sink.add(!_isShow);
+    this.listOpen.add(!_isShow);
     this.listShow.add(!_isShow);
     _isShow = !_isShow;
   }
@@ -57,18 +66,23 @@ class InputHistoryController {
   void _forceHide() {
     _isShow = false;
     this._clearFilter();
-    this.listOpen.sink.add(_isShow);
+    this.listOpen.add(_isShow);
     this.listShow.add(_isShow);
   }
 
   void show() {
-    this.listOpen.sink.add(true);
+    if (_activeController != null && _activeController != this) {
+      _activeController!._forceHide();
+    }
+
+    _activeController = this;
+    this.listOpen.add(true);
     this.listShow.add(true);
     _isShow = true;
   }
 
   void hide() {
-    this.listOpen.sink.add(false);
+    this.listOpen.add(false);
     this.listShow.add(false);
     _isShow = false;
   }
@@ -76,8 +90,8 @@ class InputHistoryController {
   Future<void> _init() async {
     this._histories = InputHistoryItems(this._limit);
     await this._load();
-    this.listEmpty.sink.add(this._histories.isEmpty);
-    this.list.sink.add(this._histories);
+    this.listEmpty.add(this._histories.isEmpty);
+    this.list.add(this._histories);
   }
 
   Future<void> remove(InputHistoryItem item) async {
@@ -86,7 +100,7 @@ class InputHistoryController {
   }
 
   Future<void> _save() async {
-    this.list.sink.add(this._histories);
+    this.list.add(this._histories);
     await this._savePreference();
   }
 
@@ -155,7 +169,7 @@ class InputHistoryController {
   }
 
   void _clearFilter() {
-    this.list.sink.add(this._histories);
+    this.list.add(this._histories);
   }
 
   void filterHistory(String text) {
@@ -164,16 +178,16 @@ class InputHistoryController {
       return;
     }
 
-    var filterdList = this
+    var filteredList = this
         ._histories
         .all
         .where((value) => value.text.contains(text) && (value.text != text))
         .toList();
 
-    InputHistoryItems filterdHistoryItems =
-        InputHistoryItems.filterd(this._limit, filterdList);
-    this.list.sink.add(filterdHistoryItems);
-    this.listEmpty.sink.add(filterdHistoryItems.isEmpty);
+    InputHistoryItems filteredHistoryItems =
+        InputHistoryItems.filterd(this._limit, filteredList);
+    this.list.add(filteredHistoryItems);
+    this.listEmpty.add(filteredHistoryItems.isEmpty);
   }
 
   Future<void> select(String text) async {
