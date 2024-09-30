@@ -162,6 +162,7 @@ class InputHistoryController {
   }
 
   void dispose() {
+    _activeController = null;
     list.close();
     listOpen.close();
     listShow.close();
