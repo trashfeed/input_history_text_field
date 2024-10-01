@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
                 listStyle: ListStyle.List,
                 onHistoryItemSelected: (value) => print(value),
                 updateSelectedHistoryItemDateTime: true,
-                decoration: InputDecoration(hintText: 'List type'),
+                decoration: InputDecoration(hintText: 'List type(update in descending order)'),
               ),
 
               /// sample2
