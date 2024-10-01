@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
             children: <Widget>[
               Text('Enter text and done'),
 
-              /// sample1
+              /// sample 1
               /// - list
               InputHistoryTextField(
                 historyKey: "01",
@@ -32,17 +32,18 @@ class MyApp extends StatelessWidget {
                 decoration: InputDecoration(hintText: 'List type'),
               ),
 
-              /// sample1
+              /// sample 2
               /// - list with updateHistoryItemDateTime
               InputHistoryTextField(
-                historyKey: "05",
+                historyKey: "02",
                 listStyle: ListStyle.List,
                 onHistoryItemSelected: (value) => print(value),
                 updateSelectedHistoryItemDateTime: true,
-                decoration: InputDecoration(hintText: 'List type(update in descending order)'),
+                decoration: InputDecoration(
+                    hintText: 'List type (update in descending order)'),
               ),
 
-              /// sample2
+              /// sample 3
               /// - badge
               InputHistoryTextField(
                 historyKey: "03",
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
                 decoration: InputDecoration(hintText: 'Badge type'),
               ),
 
-              /// sample3
+              /// sample 4
               /// - lock item
               InputHistoryTextField(
                 historyKey: "04",
@@ -69,10 +70,10 @@ class MyApp extends StatelessWidget {
                 decoration: InputDecoration(hintText: 'Fixed list'),
               ),
 
-              /// sampe4
+              /// sample 5
               /// - customize
               InputHistoryTextField(
-                historyKey: "02",
+                historyKey: "05",
                 minLines: 2,
                 maxLines: 10,
                 limit: 3,
@@ -114,7 +115,7 @@ class MyApp extends StatelessWidget {
                 listTextStyle: TextStyle(fontSize: 30),
                 historyListItemLayoutBuilder: (controller, value, index) {
                   return InkWell(
-                    onTap: () async => await controller.select(value.text),
+                    onTap: () => controller.select(value.text),
                     child: Row(
                       children: [
                         Expanded(

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:input_history_text_field/src/model/input_history_item.dart';
 import 'package:input_history_text_field/src/model/input_history_items.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:rxdart/rxdart.dart';
 
 class InputHistoryController {
   static InputHistoryController?
@@ -21,10 +20,10 @@ class InputHistoryController {
   late InputHistoryItems _histories;
   InputHistoryItems get getHistory => this._histories;
 
-  final listOpen = BehaviorSubject<bool>.seeded(false);
-  final listShow = BehaviorSubject<bool>.seeded(false);
-  final listEmpty = BehaviorSubject<bool>.seeded(false);
-  final list = BehaviorSubject<InputHistoryItems>();
+  final listOpen = StreamController<bool>();
+  final listShow = StreamController<bool>();
+  final listEmpty = StreamController<bool>();
+  final list = StreamController<InputHistoryItems>();
   void setup(
     String historyKey,
     int limit,
