@@ -7,6 +7,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   late InputHistoryController _inputHistoryController;
   late String Function(String) _textToSingleLine;
   late FocusNode _focusNode;
+  final GlobalKey _overlayHistoryListKey = GlobalKey();
   OverlayEntry? _overlayHistoryList;
   String? _lastSubmitValue;
 
@@ -32,8 +33,12 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     _inputHistoryController =
         widget.inputHistoryController ?? InputHistoryController();
     _inputHistoryController.setup(
-        widget.historyKey, widget.limit, widget.textEditingController,
-        lockItems: widget.lockItems);
+      widget.historyKey,
+      widget.limit,
+      widget.textEditingController,
+      widget.updateSelectedHistoryItemDateTime,
+      lockItems: widget.lockItems,
+    );
   }
 
   void _onTextChange() {
@@ -80,7 +85,9 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     if (!widget.showHistoryList) return;
 
     if (_focusNode.hasFocus) {
-      _inputHistoryController.toggleExpand();
+      if (!_inputHistoryController.isShown()) {
+        _inputHistoryController.toggleExpand();
+      }
     } else {
       _inputHistoryController.hide();
     }
@@ -92,7 +99,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   OverlayEntry _historyListContainer() {
-    final render = context.findRenderObject() as RenderBox;
+    final renderBox = context.findRenderObject() as RenderBox;
     return OverlayEntry(
       builder: (context) {
         return StreamBuilder<bool>(
@@ -103,8 +110,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
               return SizedBox.shrink();
             return Stack(
               children: <Widget>[
-                shown.data! ? _backdrop(context) : SizedBox.shrink(),
-                _historyList(context, render, shown.data!),
+                _historyList(context, renderBox, shown.data!),
               ],
             );
           },
@@ -131,7 +137,9 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   Widget _historyList(BuildContext context, RenderBox render, bool isShow) {
     final offset = render.localToGlobal(Offset.zero);
     final listOffset = widget.listOffset ?? Offset(0, 0);
+
     return Positioned(
+      key: _overlayHistoryListKey,
       top: offset.dy +
           render.size.height +
           (widget.listStyle == ListStyle.Badge
@@ -206,7 +214,11 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
         borderRadius: BorderRadius.all(Radius.circular(90)),
       ),
       child: InkWell(
-        onTap: () => _inputHistoryController.select(item.text),
+        onTap: () async {
+          _lastSubmitValue = item.text;
+          await _inputHistoryController.select(item.text);
+          widget.onHistoryItemSelected?.call(item.text);
+        },
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -224,26 +236,12 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     );
   }
 
-  Widget _backdrop(BuildContext context) {
-    return Positioned.fill(
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () async {
-          _focusNode.unfocus(); // Unfocus the text field if tapped outside
-          await _toggleOverlayHistoryList();
-        },
-        child: Container(
-          color: Colors.transparent,
-        ),
-      ),
-    );
-  }
-
   Widget _listHistoryItem(InputHistoryItem item) {
     return InkWell(
       onTap: () async {
         _lastSubmitValue = item.text;
-        _inputHistoryController.select(item.text);
+        await _inputHistoryController.select(item.text);
+        widget.onHistoryItemSelected?.call(item.text);
       },
       child: Container(
         padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
@@ -350,6 +348,38 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
 
   Widget _textField() {
     return TextField(
+        onTapOutside: (event) async {
+          RenderBox? overlayBox = _overlayHistoryListKey.currentContext
+              ?.findRenderObject() as RenderBox?;
+          RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+
+          if (overlayBox != null && renderBox != null) {
+            // Convert the tap's local position to global position
+            // Get the global position of the tap event
+            Offset globalTapPosition = event.position;
+
+            // Get the global position and size of the overlay entry
+            Offset overlayPosition = overlayBox.localToGlobal(Offset.zero);
+            Size overlaySize = overlayBox.size;
+
+            // Check if the tap is within the overlay bounds
+            bool tappedOutside = !(globalTapPosition.dx >= overlayPosition.dx &&
+                globalTapPosition.dx <=
+                    overlayPosition.dx + overlaySize.width &&
+                globalTapPosition.dy >= overlayPosition.dy &&
+                globalTapPosition.dy <=
+                    overlayPosition.dy + overlaySize.height);
+
+            // If tapped outside the overlay, close the overlay
+            if (tappedOutside) {
+              _focusNode.unfocus();
+              _inputHistoryController.hide();
+            }
+          } else {
+            _focusNode.unfocus();
+            _inputHistoryController.hide();
+          }
+        },
         key: widget.key,
         controller: widget.textEditingController,
         focusNode: _focusNode,

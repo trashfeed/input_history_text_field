@@ -48,6 +48,7 @@ class InputHistoryTextField extends StatefulWidget {
   final MaxLengthEnforcement? maxLengthEnforcement;
   final ValueChanged<String>? onChanged;
   final VoidCallback? onEditingComplete;
+  final ValueChanged<String>? onHistoryItemSelected;
   final List<TextInputFormatter>? inputFormatters;
   final bool? enabled;
   final double cursorWidth;
@@ -149,12 +150,15 @@ class InputHistoryTextField extends StatefulWidget {
   /// lock item font color
   final Color? lockTextColor;
 
+  final bool updateSelectedHistoryItemDateTime;
+
   InputHistoryTextField(
       {Key? key,
       required this.historyKey,
       this.historyListItemLayoutBuilder,
       this.textToSingleLine,
       this.inputHistoryController,
+      this.onHistoryItemSelected,
       this.limit = 5,
       this.hasFocusExpand = true,
       this.showHistoryIcon = true,
@@ -163,6 +167,7 @@ class InputHistoryTextField extends StatefulWidget {
       this.enableHistory = true,
       this.showHistoryList = true,
       this.enableFilterHistory = true,
+      this.updateSelectedHistoryItemDateTime = false,
       this.enableSave = true,
       this.historyIcon = Icons.history,
       this.deleteIcon = Icons.close,
@@ -255,5 +260,4 @@ class InputHistoryTextField extends StatefulWidget {
       editableTextState: editableTextState,
     );
   }
-
 }

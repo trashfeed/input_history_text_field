@@ -15,6 +15,12 @@ class InputHistoryItems {
     this._items.insert(0, (InputHistoryItem(text)));
   }
 
+  void updateByText(String text) {
+    final index = this._items.indexWhere((e) => e.text == text);
+    this._items.removeAt(index);
+    this._items.insert(0, (InputHistoryItem(text)));
+  }
+
   List<InputHistoryItem> get withoutLockItems =>
       this._items.where((value) => value.isLock == false).toList();
 

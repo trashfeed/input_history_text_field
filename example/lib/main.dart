@@ -23,7 +23,8 @@ class MyApp extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Text('Enter text and done'),
-              /// sample1
+
+              /// sample 1
               /// - list
               InputHistoryTextField(
                 historyKey: "01",
@@ -31,7 +32,18 @@ class MyApp extends StatelessWidget {
                 decoration: InputDecoration(hintText: 'List type'),
               ),
 
-              /// sample2
+              /// sample 2
+              /// - list with updateHistoryItemDateTime
+              InputHistoryTextField(
+                historyKey: "02",
+                listStyle: ListStyle.List,
+                onHistoryItemSelected: (value) => print(value),
+                updateSelectedHistoryItemDateTime: true,
+                decoration: InputDecoration(
+                    hintText: 'List type (update in descending order)'),
+              ),
+
+              /// sample 3
               /// - badge
               InputHistoryTextField(
                 historyKey: "03",
@@ -43,7 +55,7 @@ class MyApp extends StatelessWidget {
                 decoration: InputDecoration(hintText: 'Badge type'),
               ),
 
-              /// sample3
+              /// sample 4
               /// - lock item
               InputHistoryTextField(
                 historyKey: "04",
@@ -58,10 +70,10 @@ class MyApp extends StatelessWidget {
                 decoration: InputDecoration(hintText: 'Fixed list'),
               ),
 
-              /// sampe4
+              /// sample 5
               /// - customize
               InputHistoryTextField(
-                historyKey: "02",
+                historyKey: "05",
                 minLines: 2,
                 maxLines: 10,
                 limit: 3,
