@@ -1,3 +1,7 @@
+## [0.4.0] 2024-10-12.
+- new feature
+  - https://github.com/trashfeed/input_history_text_field/pull/23
+
 ## [0.3.1] 2024-09-14.
 - fix bug
   - https://github.com/trashfeed/input_history_text_field/pull/20
