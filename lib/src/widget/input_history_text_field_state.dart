@@ -134,7 +134,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
 
   Decoration _listDecoration() {
     return BoxDecoration(
-      color: Theme.of(context).colorScheme.surfaceContainer,
+      color: Theme.of(context).colorScheme.surfaceContainerLowest,
       borderRadius: BorderRadius.only(
         bottomLeft: Radius.circular(8),
         bottomRight: Radius.circular(8),
@@ -259,47 +259,20 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   Widget _listHistoryItem(InputHistoryItem item) {
-    return InkWell(
-      onTap: () async {
-        _lastSubmitValue = item.text;
-        await _inputHistoryController.select(item.text);
-        widget.onHistoryItemSelected?.call(item.text);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-        decoration: _listHistoryItemDecoration(item),
-        child: Row(
-          children: [
-            /// history icon
-            if (widget.showHistoryIcon) _historyIcon(),
-            if (widget.showHistoryIcon) SizedBox(width: 4),
-
-            /// text
-            _listHistoryItemText(item),
-
-            /// remove icon
-            if (widget.showDeleteIcon) SizedBox(width: 4),
-            if (widget.showDeleteIcon) _deleteIcon(item)
-          ],
-        ),
+    return Material(
+      color: Colors.transparent, // Make Material background transparent
+      child: ListTile(
+        
+        tileColor: _backgroundColor(item),
+        onTap: () async {
+          _lastSubmitValue = item.text;
+          await _inputHistoryController.select(item.text);
+          widget.onHistoryItemSelected?.call(item.text);
+        },
+        leading: widget.showHistoryIcon ? _historyIcon() : null,
+        trailing: widget.showDeleteIcon ? _deleteIcon(item) : null,
+        title: _historyItemText(item),
       ),
-    );
-  }
-
-  Decoration? _listHistoryItemDecoration(InputHistoryItem item) {
-    if (widget.listRowDecoration != null) return widget.listRowDecoration;
-    if (widget.backgroundColor != null) {
-      return BoxDecoration(color: _backgroundColor(item));
-    }
-    return null;
-  }
-
-  Widget _listHistoryItemText(InputHistoryItem item) {
-    return Expanded(
-      flex: 1,
-      child: Container(
-          margin: const EdgeInsets.only(left: 5.0),
-          child: _historyItemText(item)),
     );
   }
 

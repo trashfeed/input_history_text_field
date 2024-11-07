@@ -105,8 +105,6 @@ class InputHistoryTextField extends StatefulWidget {
   /// Size of History icon.
   final double? historyIconSize;
 
-  /// docoration of input history row
-  final Decoration? listRowDecoration;
 
   /// docoration of input history area
   final Decoration? listDecoration;
@@ -184,7 +182,6 @@ class InputHistoryTextField extends StatefulWidget {
     this.historyIconColor,
     this.deleteIconColor,
     this.listDecoration,
-    this.listRowDecoration,
     this.textEditingController,
     this.listOffset,
     this.lockItems,
