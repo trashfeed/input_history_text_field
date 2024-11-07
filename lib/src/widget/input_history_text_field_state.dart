@@ -366,8 +366,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
                 globalTapPosition.dy >= overlayPosition.dy &&
                 globalTapPosition.dy <=
                     overlayPosition.dy + overlaySize.height);
-            print(
-                '${overlayPosition.dx}, ${overlayPosition.dy} ${overlaySize.width}');
+           
             // If tapped outside the overlay, close the overlay
             if (tappedOutside) {
               _focusNode.unfocus();
