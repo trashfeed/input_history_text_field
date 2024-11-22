@@ -18,6 +18,19 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
     _initController();
   }
 
+  @override
+  void didUpdateWidget(covariant InputHistoryTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Re-initialize state if needed after hot reload
+    if (widget.textEditingController == null) {
+      widget.textEditingController =
+          TextEditingController(text: _lastSubmitValue);
+    }
+    _initWidgetState();
+    _initController();
+  }
+
   void _initWidgetState() {
     if (!widget.enableHistory) return;
     _focusNode = widget.focusNode ??= FocusNode();
@@ -121,14 +134,21 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
 
   Decoration _listDecoration() {
     return BoxDecoration(
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.surfaceContainerLowest,
       borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(2), bottomRight: Radius.circular(2)),
+        bottomLeft: Radius.circular(8),
+        bottomRight: Radius.circular(8),
+      ),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.2),
-          spreadRadius: 2,
-          blurRadius: 3,
+          color: Theme.of(context).colorScheme.shadow.withOpacity(0.25),
+          offset: Offset(0, 1), // Slight downward offset
+          blurRadius: 1.5,
+        ),
+        BoxShadow(
+          color: Theme.of(context).colorScheme.shadow.withOpacity(0.25),
+          offset: Offset(0, 2), // Larger downward offset
+          blurRadius: 5,
         ),
       ],
     );
@@ -146,7 +166,11 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
               ? listOffset.dy + 10
               : listOffset.dy),
       left: offset.dx + listOffset.dx,
-      width: isShow ? render.size.width : 0,
+      width: isShow
+          ? widget.listStyle == ListStyle.List
+              ? render.size.width
+              : null
+          : null,
       height: isShow ? null : 0,
       child: Material(
         child: widget.overlayHeight != null
@@ -173,6 +197,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
             return SizedBox.shrink();
           if (widget.listStyle == ListStyle.Badge) {
             return Wrap(
+              spacing: 8,
               children: [
                 for (var item in snapshot.data!.all) _badgeHistoryItem(item)
               ],
@@ -180,7 +205,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
           } else {
             return ListView.builder(
               shrinkWrap: true,
-              padding: const EdgeInsets.all(0),
+              padding: EdgeInsets.zero,
               itemCount: snapshot.data!.all.length,
               itemBuilder: (context, index) {
                 return Opacity(
@@ -202,90 +227,64 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   Widget _badgeHistoryItem(item) {
-    return Container(
-      height: 32,
-      margin: EdgeInsets.only(right: 5, bottom: 5),
-      padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
-      decoration: BoxDecoration(
-        color: _backgroundColor(item) ??
-            // ignore: deprecated_member_use_from_same_package
-            widget.badgeColor ??
-            Theme.of(context).disabledColor.withAlpha(20),
-        borderRadius: BorderRadius.all(Radius.circular(90)),
-      ),
-      child: InkWell(
-        onTap: () async {
-          _lastSubmitValue = item.text;
-          await _inputHistoryController.select(item.text);
-          widget.onHistoryItemSelected?.call(item.text);
-        },
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            /// history icon
-            if (widget.showHistoryIcon) _historyIcon(),
-
-            /// text
-            _historyItemText(item),
-
-            /// remove icon
-            if (widget.showDeleteIcon) _deleteIcon(item)
-          ],
+    return ElevatedButton(
+      style: ButtonStyle(
+        padding: WidgetStatePropertyAll(
+          EdgeInsets.symmetric(vertical: 8, horizontal: 10),
         ),
+      ),
+      onPressed: () async {
+        _lastSubmitValue = item.text;
+        await _inputHistoryController.select(item.text);
+        widget.onHistoryItemSelected?.call(item.text);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          /// history icon
+          if (widget.showHistoryIcon) _historyIcon(),
+          if (widget.showHistoryIcon) SizedBox(width: 4),
+
+          /// text
+          _historyItemText(item),
+
+          /// delete icon
+          if (widget.showDeleteIcon) SizedBox(width: 4),
+          if (widget.showDeleteIcon) _deleteIcon(item)
+        ],
       ),
     );
   }
 
   Widget _listHistoryItem(InputHistoryItem item) {
-    return InkWell(
-      onTap: () async {
-        _lastSubmitValue = item.text;
-        await _inputHistoryController.select(item.text);
-        widget.onHistoryItemSelected?.call(item.text);
-      },
-      child: Container(
-        padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
-        decoration: _listHistoryItemDecoration(item),
-        child: Row(
-          children: [
-            /// history icon
-            if (widget.showHistoryIcon) _historyIcon(),
-
-            /// text
-            _listHistoryItemText(item),
-
-            /// remove icon
-            if (widget.showDeleteIcon) _deleteIcon(item)
-          ],
-        ),
+    return Material(
+      color: Colors.transparent, // Make Material background transparent
+      child: ListTile(
+        
+        tileColor: _backgroundColor(item),
+        onTap: () async {
+          _lastSubmitValue = item.text;
+          await _inputHistoryController.select(item.text);
+          widget.onHistoryItemSelected?.call(item.text);
+        },
+        leading: widget.showHistoryIcon ? _historyIcon() : null,
+        trailing: widget.showDeleteIcon ? _deleteIcon(item) : null,
+        title: _historyItemText(item),
       ),
     );
   }
 
-  Decoration? _listHistoryItemDecoration(InputHistoryItem item) {
-    if (widget.listRowDecoration != null) return widget.listRowDecoration;
-    if (widget.backgroundColor != null) {
-      return BoxDecoration(color: _backgroundColor(item));
-    }
-    return null;
-  }
-
-  Widget _listHistoryItemText(InputHistoryItem item) {
-    return Expanded(
-      flex: 1,
-      child: Container(
-          margin: const EdgeInsets.only(left: 5.0),
-          child: _historyItemText(item)),
-    );
-  }
-
   Widget _historyItemText(InputHistoryItem item) {
-    return Text(_textToSingleLine.call(item.text),
-        overflow: TextOverflow.ellipsis,
-        style: widget.listTextStyle ??
-            TextStyle(
-                color: _textColor(item) ??
-                    Theme.of(context).textTheme.bodyLarge!.color));
+    return Text(
+      _textToSingleLine.call(item.text),
+      overflow: TextOverflow.ellipsis,
+      style: widget.listTextStyle ??
+          TextStyle(
+            color: _textColor(item),
+          ),
+    );
   }
 
   Color? _textColor(InputHistoryItem item) {
@@ -299,36 +298,34 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
   }
 
   Widget _historyIcon() {
-    return SizedBox(
-      width: 22,
-      height: 22,
-      child: widget.historyIconTheme ??
-          Icon(
-            widget.historyIcon,
-            size: 18,
-            color: widget.historyIconColor ?? Theme.of(context).disabledColor,
-          ),
-    );
+    return widget.historyIconTheme ??
+        Icon(
+          widget.historyIcon,
+          size: widget.historyIconSize ?? 24,
+          color: widget.historyIconColor,
+        );
   }
 
   Widget _deleteIcon(InputHistoryItem item) {
     if (item.isLock) return SizedBox.shrink();
-    return SizedBox(
-      width: 22,
-      height: 22,
-      child: IconButton(
-        padding: const EdgeInsets.all(0.0),
-        color: Theme.of(context).disabledColor,
-        icon: widget.deleteIconTheme ??
-            Icon(
-              widget.deleteIcon,
-              size: 18,
-              color: widget.deleteIconColor ?? Theme.of(context).disabledColor,
-            ),
-        onPressed: () {
-          _inputHistoryController.remove(item);
-        },
+    return IconButton(
+      padding: EdgeInsets.zero,
+      constraints: BoxConstraints.tight(
+        Size(
+          widget.deleteIconSize ?? 24,
+          widget.deleteIconSize ?? 24,
+        ),
       ),
+      visualDensity: VisualDensity.compact,
+      icon: widget.deleteIconTheme ??
+          Icon(
+            widget.deleteIcon,
+            size: widget.deleteIconSize ?? 24,
+            color: widget.deleteIconColor,
+          ),
+      onPressed: () {
+        _inputHistoryController.remove(item);
+      },
     );
   }
 
@@ -369,7 +366,7 @@ class InputHistoryTextFieldState extends State<InputHistoryTextField> {
                 globalTapPosition.dy >= overlayPosition.dy &&
                 globalTapPosition.dy <=
                     overlayPosition.dy + overlaySize.height);
-
+           
             // If tapped outside the overlay, close the overlay
             if (tappedOutside) {
               _focusNode.unfocus();
